@@ -5,22 +5,7 @@ class ArrEmployee {
       new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
       new Employee('NV002', '456', 'Tran Thi B', '987654321'),
       new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      //  new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      //  new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      //  new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      //  new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      //  new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-    ];
+      ];
   }
 
   addEmployee(maNV, pass, tenNV, soDT) {
@@ -41,4 +26,5 @@ class ArrEmployee {
   }
 }
 
-export default ArrEmployee; 
+const arrEmployee = new ArrEmployee();
+export default arrEmployee;
