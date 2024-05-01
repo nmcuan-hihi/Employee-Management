@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import Manager from '../Screen/Manager';
 import EmployeeManagement from '../Screen/EmployeeManagement';
-import HomeNavigation from './HomeNavigation';
 const Tab = createBottomTabNavigator();
 export default function TabNavigation() {
     return (
@@ -13,7 +12,7 @@ export default function TabNavigation() {
             tabBarActiveTintColor: 'purple',
             tabBarInactiveTintColor: 'black',
         }}>
-            <Tab.Screen name='home' component={HomeNavigation}
+            <Tab.Screen name='home' component={Manager}
                 options={{
                     tabBarLabel: ({ color }) => (
                         <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>Home</Text>
@@ -24,7 +23,7 @@ export default function TabNavigation() {
                 }}
 
             />
-            <Tab.Screen name='employee' component={HomeNavigation} 
+            <Tab.Screen name='employee' component={EmployeeManagement} 
             options={{
                 tabBarLabel: ({ color }) => (
                     <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>List Emp</Text>

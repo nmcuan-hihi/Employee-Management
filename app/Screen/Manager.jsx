@@ -1,12 +1,10 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons,FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
-export default function Manager() {
-const nav = useNavigation();
 
+export default function Manager() {
     return (
         <ScrollView >
             <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, padding: 20}}>
@@ -14,20 +12,14 @@ const nav = useNavigation();
                     <Text style={{ fontSize: 20, fontWeight: '600', color: 'purple' }}>Employee Management</Text>
                 </View>
                 <View style={{marginTop: 20, flexDirection: 'row', gap: 20}}>
-                    <Pressable style={styles.btnContainer}
-                    
-                    >
+                    <Pressable style={styles.btnContainer}>
                         <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                             <Ionicons name="people-sharp" size={24} color="black" />
 
                         </View>
                         <Text style={{ marginTop: 7, fontWeight: 600 }}>Employee List</Text>
                     </Pressable>
-                    <Pressable style={styles.btnContainer}
-                    onPress={()=>{
-                        nav.push('attendance')
-                    }}
-                    >
+                    <Pressable style={styles.btnContainer}>
 
                         <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: 'white', alignItems: 'center', justifyContent: 'center' }}>
                         <FontAwesome5 name="user-check" size={24} color="black" />
