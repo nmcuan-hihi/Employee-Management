@@ -1,38 +1,42 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, FlatList } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Modal, FlatList, Pressable, ScrollView } from 'react-native';
+import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
 import CalendarPicker from 'react-native-calendar-picker';
 import OnBack from '../Compoment/OnBack';
 import { LinearGradient } from 'expo-linear-gradient';
 import arrEmployee from '../Model/ArrEmployee';
+import { Checkbox } from 'expo-checkbox';
+import { useNavigation } from '@react-navigation/native';
+import manageAttendance from '../Model/AttendanceSheetManager';
+import AttendanceSheet from '../Model/AttendanceSheet';
 
 const { width, height } = Dimensions.get('window');
 
 export default function InfoModal({ hideModal }) {
     const [selectedDate, setSelectedDate] = useState(null);
+    const nav = useNavigation();
     const [showModal, setShowModal] = useState(false);
     const employeesData = arrEmployee.getAllEmployees();
+    const [attendanceData, setAttendanceData] = useState([]);
+
+    useEffect(() => {
+        const data = manageAttendance.getAllAttendance();
+        setAttendanceData(data);
+    }, []);
+
+
     const handleDateChange = (date) => {
-        const str = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        const str = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
         setSelectedDate(str);
         setShowModal(false)
     };
 
-    // Render mỗi mục trong danh sách nhân viên
+    // item nhân viên
     const renderItem = ({ item }) => (
-
         <View style={styles.item}>
-
-
-            {/* <Pressable style={{ }}>
-                <View style={{ marginRight: 10, padding: 7, width: 45, height: 45, borderRadius: 7, backgroundColor: 'white', alignItems: 'center' }}>
-                    <Ionicons name="newspaper-outline" size={24} color="black" />
-                </View>
-                <Text style={{ fontWeight: 600 }}>NO VALUE</Text>
-            </Pressable> */}
-
             <Text style={styles.name}>{item.maNV}</Text>
             <Text style={styles.position}>{item.tenNV}</Text>
+            <Checkbox style={styles.checkbox} value={true} onValueChange={() => { }} color={'blue'} />
         </View>
     );
 
@@ -68,14 +72,40 @@ export default function InfoModal({ hideModal }) {
                         </View>
                     </View>
                 </Modal>
-                <View style={styles.container}>
-                    <FlatList
-                        data={employeesData}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.maNV} // Sử dụng id hoặc mã nhân viên làm key
-                    />
+                <ScrollView style={styles.container}>
+                    <View>
+                        <FlatList
+                            data={employeesData}
+                            renderItem={renderItem}
+                        // keyExtractor={(item) => item.maNV} // Sử dụng id hoặc mã nhân viên làm key
+                        />
+                    </View>
+
+                </ScrollView>
+
+                <View style={{ flexDirection: 'row', gap: 10, marginLeft: 10, marginBottom: 10 }}>
+                    <Checkbox />
+                    <Text style={{ fontWeight: 600 }}>Select All</Text>
+                </View>
+                <View style={{ flexDirection: 'row', gap: 20, marginHorizontal: 10 }}>
+                    <Pressable style={[styles.btnContainer, { flex: 1 }]}
+                    >
+                        <Text style={{ marginTop: 7, fontWeight: 500, fontSize: 20, color: 'white' }}>Submit</Text>
+                    </Pressable>
+                    <Pressable style={[styles.btnContainer, { flex: 1 }]}
+                        onPress={() => {
+                            manageAttendance.addAttendance('NV003', '2024-09-07', '08:30', '17:30');
+                            const newData = manageAttendance.getAllAttendance();
+                            setAttendanceData(newData);nav.push('sheet')
+                        }}
+                    >
+                        <Text style={{ marginTop: 7, fontWeight: 500, fontSize: 20, color: 'white' }}>Check</Text>
+                    </Pressable>
                 </View>
             </View>
+
+
+
         </LinearGradient>
     );
 }
@@ -87,7 +117,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        borderRadius: 15,
+        borderRadius: 10,
         alignSelf: 'center',
     },
     dateText: {
@@ -130,20 +160,25 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     container: {
-
-       height: '80%',
+        height: '70%',
         backgroundColor: 'white',
         margin: 10,
         borderRadius: 10,
         padding: 20,
     },
+    btnContainer: {
+        backgroundColor: '#7F7FD5', padding: 12, borderRadius: 6, alignItems: 'center', justifyContent: 'center',
+
+    },
     item: {
-        // backgroundColor: '#f9c2ff',
-        // padding: 20,
-        // marginVertical: 8,
-        // marginHorizontal: 16,
-        // borderRadius: 10,
         marginBottom: 10,
-        backgroundColor: '#be93c5', borderRadius: 6, padding: 10, flexDirection: 'row', alignItems: 'center'
-      },
+        backgroundColor: '#E9E4F0',
+        borderRadius: 6,
+        padding: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    checkbox: {
+        marginLeft: 'auto', // đẩy vè bên phải
+    },
 });
