@@ -41,4 +41,5 @@ class ArrEmployee {
   }
 }
 
-export default ArrEmployee; 
+const arrEmployee = new ArrEmployee();
+export default arrEmployee;
