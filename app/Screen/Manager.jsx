@@ -37,7 +37,11 @@ const nav = useNavigation();
                     </Pressable>
                 </View>
                 <View style={{padding: 10, backgroundColor: 'white', marginTop: 20, borderRadius: 7, gap: 10}}>
-                    <Pressable style={{ backgroundColor: '#be93c5', borderRadius: 6, padding: 10, flexDirection: 'row', alignItems: 'center'}}>
+                    <Pressable style={{ backgroundColor: '#be93c5', borderRadius: 6, padding: 10, flexDirection: 'row', alignItems: 'center'}}
+                       onPress={()=>{
+                        nav.push('sheet')
+                    }}
+                    >
                         <View style={{marginRight: 10, padding: 7, width: 45, height: 45, borderRadius: 7, backgroundColor: 'white', alignItems: 'center'}}>
                         <Ionicons name="newspaper-outline" size={24} color="black" />
                         </View>
@@ -55,7 +59,11 @@ const nav = useNavigation();
                         </View>
                         <Text style={{fontWeight: 600}}>CURD Employee</Text>
                     </Pressable>
-                    <Pressable style={{ backgroundColor: '#be93c5', borderRadius: 6, padding: 10, flexDirection: 'row', alignItems: 'center'}}>
+                    <Pressable style={{ backgroundColor: '#be93c5', borderRadius: 6, padding: 10, flexDirection: 'row', alignItems: 'center'}}
+                    onPress={()=>{
+                        nav.push('test')
+                    }}
+                    >
                         <View style={{marginRight: 10, padding: 7, width: 45, height: 45, borderRadius: 7, backgroundColor: 'white', alignItems: 'center'}}>
                         <Ionicons name="newspaper-outline" size={24} color="black" />
                         </View>

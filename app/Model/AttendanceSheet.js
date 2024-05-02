@@ -24,7 +24,7 @@ class AttendanceSheet {
     //   if (this.timein !== null && this.timeout !== null) {
     //     return `${this.maNV} - ${this.date} - ${this.timein} - ${this.timeout}`;
     //   } else {
-        return `${this.maNV} - ${this.date}`;
+        return `${this.maNV} # ${this.date}`;
     //   }
     }
 }

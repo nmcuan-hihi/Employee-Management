@@ -9,34 +9,67 @@ import { Checkbox } from 'expo-checkbox';
 import { useNavigation } from '@react-navigation/native';
 import manageAttendance from '../Model/AttendanceSheetManager';
 import AttendanceSheet from '../Model/AttendanceSheet';
+import moment from 'moment';
 
 const { width, height } = Dimensions.get('window');
 
 export default function InfoModal({ hideModal }) {
-    const [selectedDate, setSelectedDate] = useState(null);
     const nav = useNavigation();
+    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-DD-MM'));
     const [showModal, setShowModal] = useState(false);
     const employeesData = arrEmployee.getAllEmployees();
-    const [attendanceData, setAttendanceData] = useState([]);
+    const [selectAllChecked, setSelectAllChecked] = useState(true); // select tất cả
+    const [employeeCheckStates, setEmployeeCheckStates] = useState([]); // mảng select của các nhân viên
+    const [attendanceData, setAttendanceData] = useState([]); // mảng chấm công
 
     useEffect(() => {
         const data = manageAttendance.getAllAttendance();
         setAttendanceData(data);
     }, []);
-
-
+   
+    // select ngày
     const handleDateChange = (date) => {
-        const str = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        setSelectedDate(str);
+        // const str = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+        setSelectedDate(moment(date).format('YYYY-DD-MM'));
         setShowModal(false)
     };
+    const selectAll = () => {
+        setSelectAllChecked(!selectAllChecked); // đảo ngược check all
+        setEmployeeCheckStates(Array(employeesData.length).fill(!selectAllChecked)); // danh sách nhân viên check theo check all
+    };
 
+    // cham coong nhân viên
+    const markAttendances = () => {
+        //  vòng lặp để lấy các nhân viên được check
+        employeeCheckStates.forEach((isChecked, index) => {
+            if (isChecked) {
+                const maNV = employeesData[index].maNV; 
+                console.log(new AttendanceSheet(maNV, selectedDate, '08:30', '17:30'));
+                // thêm nhân viên chấm công
+                manageAttendance.addAttendance(new AttendanceSheet(maNV, selectedDate, '08:30', '17:30'))
+                const newData = manageAttendance.getAllAttendance();
+                setAttendanceData(newData);
+                
+         
+            }
+        });
+
+
+    }
     // item nhân viên
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item, index }) => (
         <View style={styles.item}>
             <Text style={styles.name}>{item.maNV}</Text>
             <Text style={styles.position}>{item.tenNV}</Text>
-            <Checkbox style={styles.checkbox} value={true} onValueChange={() => { }} color={'blue'} />
+            <Checkbox style={styles.checkbox}
+                value={employeeCheckStates[index]} // value của item đc lưu trong mảng 
+                onValueChange={(newValue) => {
+                    const updatedCheckStates = [...employeeCheckStates];
+                    updatedCheckStates[index] = newValue;
+                    setEmployeeCheckStates(updatedCheckStates);
+
+                }}
+                color={'blue'} />
         </View>
     );
 
@@ -44,12 +77,14 @@ export default function InfoModal({ hideModal }) {
         <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height }}>
             <View>
                 <OnBack />
+                {/* view select ngày */}
                 <View style={styles.dateContainer}>
-                    <Text style={styles.dateText}>{selectedDate ? selectedDate.toString() : '01/01/2024'}</Text>
+                    <Text style={styles.dateText}>{selectedDate}</Text>
                     <TouchableOpacity style={styles.calendarIconContainer} onPress={() => setShowModal(true)}>
                         <Ionicons name="calendar-sharp" size={30} color="black" />
                     </TouchableOpacity>
                 </View>
+                {/* modal calendar pick ngày */}
                 <Modal
                     visible={showModal}
                     animationType="slide"
@@ -64,39 +99,42 @@ export default function InfoModal({ hideModal }) {
                                 </TouchableOpacity>
                             </View>
                             <CalendarPicker
-                                width={320} // Kích thước của modal
-                                // selectedDayTextColor='red'
-                                // setSelectedDate='red'
+                                width={320}
                                 onDateChange={handleDateChange}
                             />
                         </View>
                     </View>
                 </Modal>
-                <ScrollView style={styles.container}>
-                    <View>
-                        <FlatList
-                            data={employeesData}
-                            renderItem={renderItem}
-                        // keyExtractor={(item) => item.maNV} // Sử dụng id hoặc mã nhân viên làm key
-                        />
-                    </View>
 
-                </ScrollView>
+                {/* list nhân viên */}
+                <View style={styles.container}>
+                    <FlatList
+                        data={employeesData}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.maNV}
+                    />
+
+                    {/* chức năng */}
+                </View>
 
                 <View style={{ flexDirection: 'row', gap: 10, marginLeft: 10, marginBottom: 10 }}>
-                    <Checkbox />
+                    <Checkbox value={selectAllChecked}
+                        onValueChange={selectAll}
+                    />
                     <Text style={{ fontWeight: 600 }}>Select All</Text>
                 </View>
                 <View style={{ flexDirection: 'row', gap: 20, marginHorizontal: 10 }}>
                     <Pressable style={[styles.btnContainer, { flex: 1 }]}
+                    onPress={markAttendances}
                     >
                         <Text style={{ marginTop: 7, fontWeight: 500, fontSize: 20, color: 'white' }}>Submit</Text>
                     </Pressable>
                     <Pressable style={[styles.btnContainer, { flex: 1 }]}
                         onPress={() => {
-                            manageAttendance.addAttendance('NV003', '2024-09-07', '08:30', '17:30');
+                            manageAttendance.addAttendance(new AttendanceSheet("NV003", '2024-02-05', '08:30', '17:30'))
                             const newData = manageAttendance.getAllAttendance();
-                            setAttendanceData(newData);nav.push('sheet')
+                            setAttendanceData(newData);
+                            nav.push('sheet')
                         }}
                     >
                         <Text style={{ marginTop: 7, fontWeight: 500, fontSize: 20, color: 'white' }}>Check</Text>
@@ -160,7 +198,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     container: {
-        height: '70%',
+        height: '72%',
         backgroundColor: 'white',
         margin: 10,
         borderRadius: 10,

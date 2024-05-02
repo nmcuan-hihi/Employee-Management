@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Manager from '../Screen/Manager';
 import MarkAttendance from '../Screen/MarkAttendance';
 import ViewAttendanceSheet from '../Screen/ViewAttendanceSheet';
+import TestScreen from '../Screen/TestScreen';
 
 
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ export default function HomeNavigation() {
         <Stack.Screen name='manager' component={Manager}/>
         <Stack.Screen name='attendance' component={MarkAttendance}/>
         <Stack.Screen name='sheet' component={ViewAttendanceSheet}/>
+        <Stack.Screen name='test' component={TestScreen}/>
     </Stack.Navigator>
   )
 }
