@@ -15,10 +15,10 @@ const { width, height } = Dimensions.get('window');
 
 export default function InfoModal({ hideModal }) {
     const nav = useNavigation();
-    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-DD-MM'));
+    const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
     const [showModal, setShowModal] = useState(false);
     const employeesData = arrEmployee.getAllEmployees();
-    const [selectAllChecked, setSelectAllChecked] = useState(true); // select tất cả
+    const [selectAllChecked, setSelectAllChecked] = useState(false); // select tất cả
     const [employeeCheckStates, setEmployeeCheckStates] = useState([]); // mảng select của các nhân viên
     const [attendanceData, setAttendanceData] = useState([]); // mảng chấm công
 
@@ -30,7 +30,7 @@ export default function InfoModal({ hideModal }) {
     // select ngày
     const handleDateChange = (date) => {
         // const str = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        setSelectedDate(moment(date).format('YYYY-DD-MM'));
+        setSelectedDate(moment(date).format('YYYY-MM-DD'));
         setShowModal(false)
     };
     const selectAll = () => {

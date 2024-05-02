@@ -1,112 +1,41 @@
-import { View, Text, Pressable, StyleSheet, Modal } from 'react-native'
-import React, { useState } from 'react'
-import moment from 'moment';
-import { AntDesign, Feather } from "@expo/vector-icons";
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import CalendarPicker from 'react-native-calendar-picker';
+import React, { useState } from 'react';
+import { View, Button, Text } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-export default function TestScreen() {
-    const [currentDate, setCurrentDate] = useState(moment());
-    const [showModal, setShowModal] = useState(false);
-    const goToNextDay = () => {
-        const nextDate = moment(currentDate).add(1, "days");
-        setCurrentDate(nextDate);
-    };
-    const goToPrevDay = () => {
-        const prevDate = moment(currentDate).subtract(1, "days");
-        setCurrentDate(prevDate);
-    };
+const TestScreen = () => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-    const formatDate = (date) => {
-        return date.format("MMMM D, YYYY");
-    };
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
-    const handleDateChange = (date) => {
-        const str = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
-        //setSelectedDate(str);
-        setShowModal(false)
-    };
-    return (
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-            <Pressable>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        marginVertical: 20,
-                    }}
-                >
-                    <AntDesign
-                        onPress={goToPrevDay}
-                        name="left"
-                        size={24}
-                        color="blue"
-                    />
-                    <TouchableOpacity
-                        onPress={() => {
-                            setShowModal(true)
-                        }}
-                    >
-                        <Text>{formatDate(currentDate)}</Text>
-                    </TouchableOpacity>
-                    <AntDesign
-                        onPress={goToNextDay}
-                        name="right"
-                        size={24}
-                        color="blue"
-                    />
-                </View>
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
-            </Pressable>
+  const handleConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
 
-            <Modal
-    visible={showModal}
-    animationType="slide"
-    transparent={true}
-    onRequestClose={() => setShowModal(false)} // Sửa đổi đây
->
-    <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-            <View style={styles.headerContainer}>
-                <Pressable
-                    onPress={() => {
-                        setShowModal(false)
-                    }}
-                >
-                    <Feather name="x-circle" size={24} color="black" style={styles.icon} />
-                </Pressable>
-            </View>
-            <CalendarPicker
-                width={320}
-                onDateChange={handleDateChange}
-            />
-        </View>
+  return (
+    <View>
+      <Button title="Show Datde Picker" onPress={showDatePicker} />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="time" // Chọn mode là "time" cho việc chọn thời gian
+        display="inline" // Hiển thị picker ngay trong modal
+        is24Hour={true} // Sử dụng định dạng 24 giờ
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+      {/* Hiển thị ngày/thời gian đã chọn */}
+      {selectedDate && (
+        <Text>Đã chọn: {selectedDate.toLocaleString()}</Text>
+      )}
     </View>
-</Modal>
+  );
+};
 
-        </View>
-
-    );
-}
-const styles = StyleSheet.create({
-    modalBackground: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalContainer: {
-        width: '80%', // Kích thước của modal 
-        backgroundColor: 'white',
-        borderRadius: 15,
-        padding: 20,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginBottom: 20,
-    },
-})
+export default TestScreen;

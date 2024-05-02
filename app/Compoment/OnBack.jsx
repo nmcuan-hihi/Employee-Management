@@ -11,7 +11,7 @@ export default function OnBack({ text }) {
                 onPress={() => nav.goBack()}
             >
                 <Ionicons name="arrow-back-circle-outline" size={35} color="black" />
-               {text==null? "": <Text style={{ fontSize: 24 }}>{text}</Text>}
+               {text==null? "": <Text style={{ fontSize: 20 }}>{text}</Text>}
             </TouchableOpacity>
         </View>
     )

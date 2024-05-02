@@ -8,9 +8,9 @@ export default function Manager() {
 const nav = useNavigation();
 
     return (
-        <ScrollView >
-            <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, padding: 20}}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        // <ScrollView >
+            <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height, padding: 20}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 20, fontWeight: '600', color: 'purple' }}>Employee Management</Text>
                 </View>
                 <View style={{marginTop: 20, flexDirection: 'row', gap: 20}}>
@@ -72,7 +72,7 @@ const nav = useNavigation();
                     
                 </View>
             </LinearGradient>
-        </ScrollView>
+        // </ScrollView>
     )
 }
 
