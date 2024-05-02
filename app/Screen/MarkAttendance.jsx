@@ -46,7 +46,7 @@ export default function InfoModal({ hideModal }) {
                 const maNV = employeesData[index].maNV; 
                 console.log(new AttendanceSheet(maNV, selectedDate, '08:30', '17:30'));
                 // thêm nhân viên chấm công
-                manageAttendance.addAttendance(new AttendanceSheet(maNV, selectedDate, '08:30', '17:30'))
+                manageAttendance.addAttendance(maNV, selectedDate, '08:30', '17:30')
                 const newData = manageAttendance.getAllAttendance();
                 setAttendanceData(newData);
                 
@@ -81,7 +81,7 @@ export default function InfoModal({ hideModal }) {
                 <View style={styles.dateContainer}>
                     <Text style={styles.dateText}>{selectedDate}</Text>
                     <TouchableOpacity style={styles.calendarIconContainer} onPress={() => setShowModal(true)}>
-                        <Ionicons name="calendar-sharp" size={30} color="black" />
+                        <Ionicons name="calendar-sharp" size={30} color="blue" />
                     </TouchableOpacity>
                 </View>
                 {/* modal calendar pick ngày */}
@@ -131,9 +131,9 @@ export default function InfoModal({ hideModal }) {
                     </Pressable>
                     <Pressable style={[styles.btnContainer, { flex: 1 }]}
                         onPress={() => {
-                            manageAttendance.addAttendance(new AttendanceSheet("NV003", '2024-02-05', '08:30', '17:30'))
-                            const newData = manageAttendance.getAllAttendance();
-                            setAttendanceData(newData);
+                            // manageAttendance.addAttendance(new AttendanceSheet("NV003", '2024-02-05', '08:30', '17:30'))
+                            // const newData = manageAttendance.getAllAttendance();
+                            // setAttendanceData(newData);
                             nav.push('sheet')
                         }}
                     >
