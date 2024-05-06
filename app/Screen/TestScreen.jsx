@@ -1,41 +1,74 @@
 import React, { useState } from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 
 const TestScreen = () => {
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedTimeIn, setSelectedTimeIn] = useState(moment().format('HH:mm'));
+  const [selectedTimeOut, setSelectedTimeOut] = useState(moment().format('HH:mm'));
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const showTimePickerFor = (type) => {
+    setShowTimePicker(true);
+    setTypeToPick(type);
   };
 
   const handleConfirm = (date) => {
-    setSelectedDate(date);
-    hideDatePicker();
+    const selectedTime = moment(date).format('HH:mm');
+    if (typeToPick === 'In') {
+      setSelectedTimeIn(selectedTime);
+    } else if (typeToPick === 'Out') {
+      setSelectedTimeOut(selectedTime);
+    }
+    setShowTimePicker(false);
   };
+
+  const [typeToPick, setTypeToPick] = useState(null);
 
   return (
     <View>
-      <Button title="Show Datde Picker" onPress={showDatePicker} />
+      <View style={styles.timeContainer}>
+        <Text>In</Text>
+        <TouchableOpacity
+          style={{padding:5}}
+          onPress={() => showTimePickerFor('In')}
+        >
+          <Text style={styles.text}>{selectedTimeIn}</Text>
+        </TouchableOpacity>
+        <Text>, Out</Text>
+       
+        <TouchableOpacity
+          style={{padding:5}}
+          onPress={() => showTimePickerFor('Out')}
+        >
+          <Text style={styles.text}>{selectedTimeOut}</Text>
+        </TouchableOpacity>
+      </View>
+
       <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="time" // Chọn mode là "time" cho việc chọn thời gian
-        display="inline" // Hiển thị picker ngay trong modal
-        is24Hour={true} // Sử dụng định dạng 24 giờ
+        isVisible={showTimePicker}
+        mode="time"
+        display="spinner"
+        is24Hour={true}
         onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
+        onCancel={() => setShowTimePicker(false)}
       />
-      {/* Hiển thị ngày/thời gian đã chọn */}
-      {selectedDate && (
-        <Text>Đã chọn: {selectedDate.toLocaleString()}</Text>
-      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  
+  text: {
+    fontSize: 16,
+    color: 'blue',
+  },
+});
 
 export default TestScreen;

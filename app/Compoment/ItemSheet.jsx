@@ -1,11 +1,22 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text, Pressable } from 'react-native';
 import TimeSheet from './TimeSheet';
 import manageAttendance from '../Model/AttendanceSheetManager';
+import { useNavigation } from '@react-navigation/native';
 
-const SheetItem = ({ item, year }) => (
+const SheetItem = ({ item, year }) => {
+  const navigation = useNavigation();
+
+  const goToTableAttendance = () => {
+    navigation.push('tableattendance', { maNV: item.maNV });
+  };
+
+  return (
     <View style={{ marginVertical: 10 }}>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <Pressable
+        style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+        onPress={goToTableAttendance}
+      >
         <View
           style={{
             width: 50,
@@ -18,7 +29,7 @@ const SheetItem = ({ item, year }) => (
           }}
         >
           <Text style={{ color: "white", fontSize: 16 }}>
-          {item?.tenNV.split(" ").pop()?.charAt(0)}
+            {item?.tenNV.split(" ").pop()?.charAt(0)}
           </Text>
         </View>
         <View style={{ flex: 1 }}>
@@ -28,12 +39,12 @@ const SheetItem = ({ item, year }) => (
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>
             {item?.tenNV}
           </Text>
-                     
-        </View>      
-      </View>
-      {/* bảng chấm công */} 
+        </View>
+      </Pressable>
+      {/* Bảng chấm công */}
       <TimeSheet maNV={item?.maNV} year={year} manageAttendance={manageAttendance} />
     </View>
-       
   );
-  export default SheetItem;
+};
+
+export default SheetItem;

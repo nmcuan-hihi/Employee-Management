@@ -64,6 +64,9 @@ class ManageAttendance {
     const workingDaysSet = new Set(filteredAttendance.map(attendance => attendance.date));
     return workingDaysSet.size;
   }
+  getAttendanceData(maNV, date) {
+    return this.attendanceList.filter(attendance => attendance.maNV === maNV && attendance.date === date);
+  }
 }
 
 const manageAttendance = new ManageAttendance();

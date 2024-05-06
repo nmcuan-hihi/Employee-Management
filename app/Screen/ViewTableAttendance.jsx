@@ -11,13 +11,13 @@ import TimeSheet from '../Compoment/TimeSheet';
 import moment from 'moment';
 import SheetItem from '../Compoment/ItemSheet';
 import TableAttendance from '../Compoment/TableAttendance';
-import { router } from 'expo-router';
+import { useRoute } from '@react-navigation/native';
 
 
 export default function ViewTableAttendance() {
     //  const [currentDate, setCurrentDate] = useState(moment());
-    const maNV = 'NV001';
-    //const maNV = router.params.maNV;
+    const route = useRoute();
+    const maNV = route.params.maNV;
     const [month, setMonth] = useState(moment());
     const emp = arrEmployee.getEmployeeByMaNV(maNV);
 
@@ -29,7 +29,7 @@ export default function ViewTableAttendance() {
     };
     return (
         <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height }}>
-            <View>
+            <View style={{padding:20}}>
                 <OnBack />
                 <Pressable>
                     <View
@@ -84,3 +84,4 @@ export default function ViewTableAttendance() {
 
     )
 }
+
