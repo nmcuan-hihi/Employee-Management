@@ -11,6 +11,7 @@ import manageAttendance from '../Model/AttendanceSheetManager';
 import AttendanceSheet from '../Model/AttendanceSheet';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Message from '../Compoment/Message';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,13 +29,20 @@ export default function InfoModal({ hideModal }) {
     const [selectedTimeIn, setSelectedTimeIn] = useState(moment().format('HH:mm'));
     const [selectedTimeOut, setSelectedTimeOut] = useState(moment().format('HH:mm'));
     const [typeToPick, setTypeToPick] = useState(null); // nhận biêt pick in hay out
+    // thông báo
+    const [showMessage, setShowMessage] = useState(false);  // ẩn thông báo
+
+
+
 
     useEffect(() => {
         setSelectedTimeIn('08:30');
         setSelectedTimeOut('17:30');
         const data = manageAttendance.getAllAttendance();
         setAttendanceData(data);
+
     }, []);
+
 
     // select ngày
     const handleDateChange = (date) => {
@@ -46,6 +54,7 @@ export default function InfoModal({ hideModal }) {
     const showTimePickerFor = (type) => {
         setShowTimePicker(true);
         setTypeToPick(type);
+
     };
     // thực hiện pịck giờ và lưu
     const pickTimeInOut = (date) => {
@@ -64,6 +73,8 @@ export default function InfoModal({ hideModal }) {
 
     // cham coong nhân viên
     const markAttendances = () => {
+
+
         //  vòng lặp để lấy các nhân viên được check
         employeeCheckStates.forEach((isChecked, index) => {
             if (isChecked) {
@@ -73,9 +84,14 @@ export default function InfoModal({ hideModal }) {
                 manageAttendance.addAttendance(maNV, selectedDate, selectedTimeIn, selectedTimeOut);
                 const newData = manageAttendance.getAllAttendance();
                 setAttendanceData(newData);
-                
+
             }
         });
+
+        if (employeeCheckStates.every((isChecked) => isChecked === false) == false) {
+            // nếu có cheeck đuọc check và chấm công, hiển thị thông báo
+            setShowMessage(true);
+        }
 
 
     }
@@ -97,9 +113,11 @@ export default function InfoModal({ hideModal }) {
     );
 
     return (
+
         <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height }}>
             <View>
                 <OnBack />
+
                 {/* view select ngày */}
                 <View style={styles.dateContainer}>
                     <Text style={styles.dateText}>{selectedDate}</Text>
@@ -157,6 +175,28 @@ export default function InfoModal({ hideModal }) {
                     </View>
                 </Modal>
 
+                {/* modal message */}
+                <Modal visible={showMessage} animationType="fade" transparent>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                       
+                    }}>
+                        <View style={styles.messageContainer}>
+                            <View style={{ alignItems: 'center', }}>
+                                <Text>Successfully!</Text>
+                                <TouchableOpacity onPress={() => setShowMessage(false)}>
+                                    <Text style={{
+                                        color: 'blue',
+                                        fontSize: 16,
+                                        marginTop: 10,
+                                    }}>Đóng</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 {/* list nhân viên */}
                 <View style={styles.container}>
                     <FlatList
@@ -174,12 +214,17 @@ export default function InfoModal({ hideModal }) {
                     />
                     <Text style={{ fontWeight: 600 }}>Select All</Text>
                 </View>
+
                 <View style={{ flexDirection: 'row', gap: 20, marginHorizontal: 10 }}>
                     <Pressable style={[styles.btnContainer, { flex: 1 }]}
-                        onPress={markAttendances}
+                        onPress={() => {
+                            markAttendances()
+                        }}
+                    // onPress={markAttendances}
                     >
                         <Text style={{ marginTop: 7, fontWeight: 500, fontSize: 20, color: 'white' }}>Submit</Text>
                     </Pressable>
+
                     <Pressable style={[styles.btnContainer, { flex: 1 }]}
                         onPress={() => {
                             // manageAttendance.addAttendance(new AttendanceSheet("NV003", '2024-02-05', '08:30', '17:30'))
@@ -192,7 +237,6 @@ export default function InfoModal({ hideModal }) {
                     </Pressable>
                 </View>
             </View>
-
 
 
         </LinearGradient>
@@ -283,4 +327,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'blue',
     },
+    messageContainer: {
+        width: '80%',
+        backgroundColor: 'white',
+        borderRadius: 5,
+        borderWidth: 2,  
+        borderColor: 'blue', 
+        padding: 20,
+      },
 });
