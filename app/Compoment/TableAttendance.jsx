@@ -4,7 +4,7 @@ import { DataTable } from 'react-native-paper';
 import manageAttendance from '../Model/AttendanceSheetManager';
 import moment from 'moment'; // Import thư viện moment
 import { AntDesign } from '@expo/vector-icons';
-
+import { showMessage, hideMessage } from "react-native-flash-message";
 export default function TableAttendance({ maNV, month, year }) {
   const daysInMonth = Array.from({ length: 31 }, (_, i) => i + 1); // Tạo mảng từ 1 đến 31 để hiển thị các ngày trong tháng 
   const [attendanceData, setAttendanceData] = useState(Array(31).fill({ timein: '-', timeout: '-' })); // Mảng ban đầu với 31 phần tử rỗng
@@ -34,6 +34,11 @@ export default function TableAttendance({ maNV, month, year }) {
     const newData = [...attendanceData];
     newData[day - 1] = { timein: '-', timeout: '-' }; // Xóa dữ liệu trong bảng của ngày đã chọn
     setAttendanceData(newData);
+    showMessage({
+      message: "Success",
+      description: "Delete attendance successfully!",
+      type: "success",
+    });
   };
 
   return (

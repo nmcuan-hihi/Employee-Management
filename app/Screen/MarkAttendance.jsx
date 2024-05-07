@@ -11,7 +11,7 @@ import manageAttendance from '../Model/AttendanceSheetManager';
 import AttendanceSheet from '../Model/AttendanceSheet';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Message from '../Compoment/Message';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,8 +29,8 @@ export default function InfoModal({ hideModal }) {
     const [selectedTimeIn, setSelectedTimeIn] = useState(moment().format('HH:mm'));
     const [selectedTimeOut, setSelectedTimeOut] = useState(moment().format('HH:mm'));
     const [typeToPick, setTypeToPick] = useState(null); // nhận biêt pick in hay out
-    // thông báo
-    const [showMessage, setShowMessage] = useState(false);  // ẩn thông báo
+    
+   
 
 
 
@@ -90,7 +90,11 @@ export default function InfoModal({ hideModal }) {
 
         if (employeeCheckStates.every((isChecked) => isChecked === false) == false) {
             // nếu có cheeck đuọc check và chấm công, hiển thị thông báo
-            setShowMessage(true);
+            showMessage({
+                message: "Success",
+                description: "Attendance marked successfully!",
+                type: "success",
+              });
         }
 
 
@@ -175,28 +179,7 @@ export default function InfoModal({ hideModal }) {
                     </View>
                 </Modal>
 
-                {/* modal message */}
-                <Modal visible={showMessage} animationType="fade" transparent>
-                    <View style={{
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                       
-                    }}>
-                        <View style={styles.messageContainer}>
-                            <View style={{ alignItems: 'center', }}>
-                                <Text>Successfully!</Text>
-                                <TouchableOpacity onPress={() => setShowMessage(false)}>
-                                    <Text style={{
-                                        color: 'blue',
-                                        fontSize: 16,
-                                        marginTop: 10,
-                                    }}>Đóng</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
+              
                 {/* list nhân viên */}
                 <View style={styles.container}>
                     <FlatList
