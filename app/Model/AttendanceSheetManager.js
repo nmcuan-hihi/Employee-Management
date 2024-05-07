@@ -32,8 +32,10 @@ class ManageAttendance {
   }
 
   addAttendance(maNV, date, timein = null, timeout = null) {
-    if (!this.attendanceList) { // Kiểm tra nếu attendanceList chưa được khởi tạo
-      this.attendanceList = []; // Khởi tạo attendanceList là một mảng rỗng
+
+    // nếu đã có ngày chấm công này thì ghi đè lên
+    if(this.getAttendanceData(maNV, date) != null){
+      this.deleteAttendance(maNV, date) 
     }
     const newAttendance = new AttendanceSheet(maNV, date, timein, timeout);
     this.attendanceList.push(newAttendance); // Thêm mới vào attendanceList
