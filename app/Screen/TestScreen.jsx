@@ -1,34 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, ScrollView } from 'react-native';
-import { Picker} from '@react-native-picker/picker';
+import { View, Text } from 'react-native'
+import React from 'react'
 
+export default function TestScreen() {
 
-
-const TestScreen = () => {
-  const [selectedValue, setSelectedValue] = useState();
+  
   return (
-    <View style={styles.container}>
-     
-
-    <Picker
-    selectedValue={selectedValue}
-    onValueChange={(itemvalue, index) =>
-
-      setSelectedValue(itemvalue)
-    }>
-      <Picker.Item label='adsfdsf' value="dsfasdf" />
-      <Picker.Item label='sdfgd' value="sdfd" />
-    </Picker>
+    <View>
+      <Text>TestScreen</Text>
     </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
- 
-});
-
-export default TestScreen;
+  )
+}

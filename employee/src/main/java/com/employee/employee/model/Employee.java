@@ -15,21 +15,23 @@ public class Employee {
     private String tenChucVu;
     private double mucLuong;
 
-    // Constructors
-    public Employee() {}
-
-    public Employee(String maNV, String pass, String tenNV, String soDT, String quyen, String diaChi, String tenChucVu, double mucLuong) {
-        this.maNV = maNV;
-        this.pass = pass;
-        this.tenNV = tenNV;
-        this.soDT = soDT;
-        this.quyen = quyen;
-        this.diaChi = diaChi;
-        this.tenChucVu = tenChucVu;
-        this.mucLuong = mucLuong;
+    public Employee() {
     }
 
-    // Getters and Setters
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "maNV='" + maNV + '\'' +
+                ", pass='" + pass + '\'' +
+                ", tenNV='" + tenNV + '\'' +
+                ", soDT='" + soDT + '\'' +
+                ", quyen='" + quyen + '\'' +
+                ", diaChi='" + diaChi + '\'' +
+                ", tenChucVu='" + tenChucVu + '\'' +
+                ", mucLuong=" + mucLuong +
+                '}';
+    }
+
     public String getMaNV() {
         return maNV;
     }
@@ -91,6 +93,17 @@ public class Employee {
     }
 
     public void setMucLuong(double mucLuong) {
+        this.mucLuong = mucLuong;
+    }
+
+    public Employee(String maNV, String pass, String tenNV, String soDT, String quyen, String diaChi, String tenChucVu, double mucLuong) {
+        this.maNV = maNV;
+        this.pass = pass;
+        this.tenNV = tenNV;
+        this.soDT = soDT;
+        this.quyen = quyen;
+        this.diaChi = diaChi;
+        this.tenChucVu = tenChucVu;
         this.mucLuong = mucLuong;
     }
 }

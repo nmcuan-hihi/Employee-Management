@@ -12,6 +12,7 @@ import AttendanceSheet from '../Model/AttendanceSheet';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,6 +33,8 @@ export default function InfoModal({ hideModal }) {
     
    
 
+    // data api
+    //const [employeesData, setArremployee] =  useState([]);
 
 
 
@@ -40,9 +43,21 @@ export default function InfoModal({ hideModal }) {
         setSelectedTimeOut('17:30');
         const data = manageAttendance.getAllAttendance();
         setAttendanceData(data);
-
+       
     }, []);
 
+  
+
+    const getArremployee = async () => {
+        try {
+            const response = await axios.get('http://10.0.2.2:8080/employee/getAll');
+            setArremployee(response.data);
+            console.log(response.data);            
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Failed to fetch class list. Please try again!');
+        }
+    };
 
     // select ngày
     const handleDateChange = (date) => {
