@@ -6,6 +6,7 @@ import Manager from '../Screen/Manager';
 import EmployeeManagement from '../Screen/EmployeeManagement';
 import HomeNavigation from './HomeNavigation';
 import TinhLuongNavigation from './TinhLuongNavigation';
+import CrudNavigation from './CrudNavigation';
 const Tab = createBottomTabNavigator();
 export default function TabNavigation() {
     return (
@@ -25,7 +26,7 @@ export default function TabNavigation() {
                 }}
 
             />
-            <Tab.Screen name='employee' component={HomeNavigation} 
+            <Tab.Screen name='Crud' component={CrudNavigation} 
             options={{
                 tabBarLabel: ({ color }) => (
                     <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>List Emp</Text>
@@ -38,7 +39,7 @@ export default function TabNavigation() {
             <Tab.Screen name='TinhLuong' component={TinhLuongNavigation}
             options={{
                 tabBarLabel: ({ color }) => (
-                    <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>No value</Text>
+                    <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>Tính Lương</Text>
                 ),
                 tabBarIcon: ({ color, size }) => (
                     <FontAwesome name="bookmark" size={24} color={color} />

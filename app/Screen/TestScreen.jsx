@@ -1,74 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
+import { View, Text, Button, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { Picker} from '@react-native-picker/picker';
+
+
 
 const TestScreen = () => {
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [selectedTimeIn, setSelectedTimeIn] = useState(moment().format('HH:mm'));
-  const [selectedTimeOut, setSelectedTimeOut] = useState(moment().format('HH:mm'));
-
-  const showTimePickerFor = (type) => {
-    setShowTimePicker(true);
-    setTypeToPick(type);
-  };
-
-  const handleConfirm = (date) => {
-    const selectedTime = moment(date).format('HH:mm');
-    if (typeToPick === 'In') {
-      setSelectedTimeIn(selectedTime);
-    } else if (typeToPick === 'Out') {
-      setSelectedTimeOut(selectedTime);
-    }
-    setShowTimePicker(false);
-  };
-
-  const [typeToPick, setTypeToPick] = useState(null);
-
+  const [selectedValue, setSelectedValue] = useState();
   return (
-    <View>
-      <View style={styles.timeContainer}>
-        <Text>In</Text>
-        <TouchableOpacity
-          style={{padding:5}}
-          onPress={() => showTimePickerFor('In')}
-        >
-          <Text style={styles.text}>{selectedTimeIn}</Text>
-        </TouchableOpacity>
-        <Text>, Out</Text>
-       
-        <TouchableOpacity
-          style={{padding:5}}
-          onPress={() => showTimePickerFor('Out')}
-        >
-          <Text style={styles.text}>{selectedTimeOut}</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+     
 
-      <DateTimePickerModal
-        isVisible={showTimePicker}
-        mode="time"
-        display="spinner"
-        is24Hour={true}
-        onConfirm={handleConfirm}
-        onCancel={() => setShowTimePicker(false)}
-      />
+    <Picker
+    selectedValue={selectedValue}
+    onValueChange={(itemvalue, index) =>
+
+      setSelectedValue(itemvalue)
+    }>
+      <Picker.Item label='adsfdsf' value="dsfasdf" />
+      <Picker.Item label='sdfgd' value="sdfd" />
+    </Picker>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
+  container: {
+    flex: 1,
+    padding: 10,
   },
-  
-  text: {
-    fontSize: 16,
-    color: 'blue',
-  },
+ 
 });
 
 export default TestScreen;

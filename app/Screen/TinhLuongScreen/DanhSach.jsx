@@ -7,16 +7,18 @@ import arrEmployee from '../../Model/ArrEmployee'
 export default function DanhSach() {
   const navigation = useNavigation();  
  const employees = arrEmployee.getAllEmployees();
-  useEffect(() => {
-    updateEmployeeData();
-  }, []);
+//   useEffect(() => {
+//     updateEmployeeData();
+//   }, []);
 
   
    
 
 
   const renderEmployeeItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('navChiTietNV', { employee: item })}>
+    <TouchableOpacity 
+    onPress={() => navigation.navigate('navChiTietNV', { employee: item })
+    }>
       <View key={item.maNV} style={styles.employeeItem}>
         <Text>{item.maNV}</Text>
         <Text>{item.tenNV}</Text>
