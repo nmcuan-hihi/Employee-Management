@@ -12,6 +12,12 @@ const nav = useNavigation();
             <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height, padding: 20}}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontSize: 20, fontWeight: '600', color: 'purple' }}>Employee Management</Text>
+                    <TouchableOpacity
+                     onPress={() => nav.goBack()}
+                    >
+                         <FontAwesome5 name="sign-out-alt" size={24} color="black" />
+                    </TouchableOpacity>
+                   
                 </View>
                 <View style={{marginTop: 20, flexDirection: 'row', gap: 20}}>
                     <Pressable style={styles.btnContainer}

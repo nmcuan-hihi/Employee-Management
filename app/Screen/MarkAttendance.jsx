@@ -120,7 +120,7 @@ export default function InfoModal({ hideModal }) {
 
         <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height }}>
             <View>
-                <OnBack />
+                <OnBack text={"Mark Attendance"}/>
 
                 {/* view select ngày */}
                 <View style={styles.dateContainer}>

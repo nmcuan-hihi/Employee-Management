@@ -1,15 +1,18 @@
-
 class Employee {
-    constructor(maNV, pass, tenNV, soDT) {
-      this.maNV = maNV;
-      this.pass = pass;
-      this.tenNV = tenNV;
-      this.soDT = soDT;
-    }
-  
-    getFullInfo() {
-      return `${this.tenNV} - ${this.soDT}`;
-    }
+  constructor(maNV, pass, tenNV, soDT, quyen, diaChi, tenChucVu, mucLuong) {
+    this.maNV = maNV;
+    this.pass = pass;
+    this.tenNV = tenNV;
+    this.soDT = soDT;
+    this.diaChi = diaChi;
+    this.tenChucVu = tenChucVu;
+    this.mucLuong = mucLuong;
+    this.quyen = quyen;
   }
-  export default Employee;
-  
+
+  getFullInfo() {
+    return `Name: ${this.tenNV}, Phone: ${this.soDT}, Address: ${this.diaChi}, Position: ${this.tenChucVu}, Salary: ${this.mucLuong}, Rights: ${this.quyen}`;
+  }
+}
+
+export default Employee;

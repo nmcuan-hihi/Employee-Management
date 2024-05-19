@@ -5,6 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import Manager from '../Screen/Manager';
 import EmployeeManagement from '../Screen/EmployeeManagement';
 import HomeNavigation from './HomeNavigation';
+import TinhLuongNavigation from './TinhLuongNavigation';
 const Tab = createBottomTabNavigator();
 export default function TabNavigation() {
     return (
@@ -34,7 +35,7 @@ export default function TabNavigation() {
                 )
             }}
             />
-            <Tab.Screen name='tab3' component={Manager}
+            <Tab.Screen name='TinhLuong' component={TinhLuongNavigation}
             options={{
                 tabBarLabel: ({ color }) => (
                     <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>No value</Text>

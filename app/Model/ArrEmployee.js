@@ -2,35 +2,15 @@ import Employee from './Employee';
 class ArrEmployee {
   constructor() {
     this.employees = [
-      new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
-      // new Employee('NV001', '123', 'Nguyen Van A', '123456789'),
-      // new Employee('NV002', '456', 'Tran Thi B', '987654321'),
-      // new Employee('NV003', '789', 'Le Thi C', '456123789'),
+      new Employee('NV001', '123', 'Nguyễn Văn A', '123456789', 'admin'),
+      new Employee('NV002', '456', 'Trần Thị B', '987654321', 'user'),
+      new Employee('1', '1', 'Nguyễn Văn A', '123456789', 'admin'),
+      new Employee('2', '1', 'Nguyễn Văn A', '123456789', 'user'),
       ];
   }
 
-  addEmployee(maNV, pass, tenNV, soDT) {
-    const newEmployee = new Employee(maNV, pass, tenNV, soDT);
+  addEmployee(maNV, pass, tenNV, soDT, quyen) {
+    const newEmployee = new Employee(maNV, pass, tenNV, soDT, quyen);
     this.employees.push(newEmployee);
   }
 
