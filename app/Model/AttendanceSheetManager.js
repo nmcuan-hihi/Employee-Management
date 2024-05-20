@@ -34,8 +34,8 @@ class ManageAttendance {
   addAttendance(maNV, date, timein = null, timeout = null) {
 
     // nếu đã có ngày chấm công này thì ghi đè lên
-    if(this.getAttendanceData(maNV, date) != null){
-      this.deleteAttendance(maNV, date) 
+    if (this.getAttendanceData(maNV, date) != null) {
+      this.deleteAttendance(maNV, date)
     }
     const newAttendance = new AttendanceSheet(maNV, date, timein, timeout);
     this.attendanceList.push(newAttendance); // Thêm mới vào attendanceList
@@ -69,7 +69,31 @@ class ManageAttendance {
   getAttendanceData(maNV, date) {
     return this.attendanceList.filter(attendance => attendance.maNV === maNV && attendance.date === date);
   }
+
+  //maNV, date, timein = null, timeout = null
+  calculateTotalWorkingHours(maNV, month, year) {
+    const filteredAttendance = this.attendanceList.filter(attendance => {
+      const attendanceDate = new Date(attendance.date);
+      return attendance.maNV === maNV &&
+        attendanceDate.getMonth() === month - 1 &&
+        attendanceDate.getFullYear() === year;
+    });
+
+    let totalHours = 0;
+    filteredAttendance.forEach(attendance => {
+      const timeIn = new Date(`2000-01-01T${attendance.timein}`);
+      const timeOut = new Date(`2000-01-01T${attendance.timeout}`);
+      const diffMillis = timeOut - timeIn;
+      const diffHours = diffMillis / (1000 * 60 * 60); // Số giờ làm việc
+      totalHours += diffHours;
+    });
+
+    return totalHours;
+  }
+
 }
+
+
 
 const manageAttendance = new ManageAttendance();
 export default manageAttendance;
