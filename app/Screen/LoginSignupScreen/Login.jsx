@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
-import arrEmployee from '../../Model/ArrEmployee'
+import arrEmployee from '../../Model/ArrEmployee';
 import { useNavigation } from 'expo-router';
 const Login = ({ navigation }) => {
     
@@ -16,7 +16,7 @@ const Login = ({ navigation }) => {
                 navigation.push('Manager')
             } else if (employee.quyen === 'user') {
                 //  phải làm thêm truyền params user 
-                navigation.push('User');
+                navigation.push('User', { username: username });
             }
         } else {
             setError('Mã nhân viên hoặc mật khẩu không đúng');

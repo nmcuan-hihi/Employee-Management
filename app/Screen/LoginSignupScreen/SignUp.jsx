@@ -33,7 +33,7 @@ const RegisterScreen = ({ navigation }) => {
     setSelectedOption('');
     setQTV('');
   }
-
+  navigation.navigate('Login')
   };
  const handleLogin1 = () => {
     navigation.navigate('Login')
