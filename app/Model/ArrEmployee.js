@@ -4,6 +4,7 @@ import Employee from './Employee';
 class ArrEmployee {
   constructor() {
     this.employees = [];    
+    
   }
 
   addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong) {

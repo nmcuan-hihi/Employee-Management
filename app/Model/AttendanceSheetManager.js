@@ -22,13 +22,19 @@ class ManageAttendance {
     }
   }
 
-  deleteAttendance(maNV, date) {
-    this.attendanceList = this.attendanceList.filter(attendance =>
-      attendance.maNV !== maNV || attendance.date !== date
-    );
+  async deleteAttendance(id) {
+    try {
+      // Gọi API để xóa 
+      await axios.delete(`http://10.0.2.2:8080/attendanceSheet/delete?id=${id}`);
+      Alert.alert('OK', 'Xóa Thành Công!');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Failed to delete attendance record. Please try again!');
+    }
   }
 
-  
+
+
   getAttendanceByMaNV(maNV) {
     return this.attendanceList.filter(attendance => attendance.maNV === maNV);
   }
