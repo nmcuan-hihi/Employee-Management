@@ -26,10 +26,10 @@ export default function ChiTietNhanVien({ route }) {
           <Text style={styles.infoText}>Số điện thoại: {employee.soDT}</Text>
           <Text style={styles.infoText}>Lương ngày: {employee.mucLuong}</Text>
         </View>
-        <TouchableOpacity onPress={handlePrint} style={styles.printButton}>
-          <Text style={styles.printButtonText}>In</Text>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={handlePrint} style={styles.printButton}>
+        <Text style={styles.printButtonText}>In</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -87,14 +87,14 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 20,
-    color: 'red',
+    color: 'black', // Đổi màu chữ thành đen
     alignItems: 'flex-start',
   },
   printButton: {
     position: 'absolute',
     bottom: 10,
     right: 10,
-    backgroundColor: 'blue',
+    backgroundColor: 'green', // Thay đổi màu nền của nút in thành xanh lá cây
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
