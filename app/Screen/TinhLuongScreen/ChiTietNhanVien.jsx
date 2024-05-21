@@ -18,9 +18,6 @@ export default function ChiTietNhanVien({ route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Image source={require('../../../assets/back_icon.png')} style={styles.backButtonImage} />
-      </TouchableOpacity>
       <View style={styles.imageBox}>
         <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
       </View>

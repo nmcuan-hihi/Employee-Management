@@ -15,9 +15,6 @@ export default function PrintEmployee({ route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Image source={require('../../../assets/back_icon.png')} style={styles.backButtonImage} />
-      </TouchableOpacity>
       <Text style={styles.header}>Thông Tin Nhân Viên</Text>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
