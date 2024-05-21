@@ -47,12 +47,12 @@ const CrudDanhSach = () => {
 
   const renderEmployeeItem = ({ item }) => (
     <View key={item.maNV} style={styles.employeeItem}>
-      <Text>{item.maNV}</Text>
-      <Text>{item.tenNV}</Text>
-      <Text>{item.tenChucVu}</Text>
-      <TouchableOpacity 
-        onPress={() => navigation.push('Edit', { ma: item.maNV })}
-      >
+      <Image source={require('../../../assets/logo.png')} style={{ width: 50, height: 50, borderRadius: 25 }} />
+      <View style={{ flexDirection: 'column', flex: 1 }}>
+        <Text style={{ marginBottom: 5 }}>{item.maNV}</Text>
+        <Text>{item.tenNV}</Text>
+      </View>
+      <TouchableOpacity onPress={() => navigation.push('Edit', { ma: item.maNV })}>
         <FontAwesome5 name="edit" size={24} color="black" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => handleDeleteNhanVien(item.maNV)}>
@@ -60,6 +60,7 @@ const CrudDanhSach = () => {
       </TouchableOpacity>
     </View>
   );
+  
 
   return (
     <View style={styles.container}>
