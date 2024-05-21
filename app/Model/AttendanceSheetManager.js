@@ -103,6 +103,40 @@ class ManageAttendance {
       Alert.alert('Error', 'Failed. Please try again!');
     }
   }
+  //Tính tổng giờ trong tháng
+  async calculateTotalWorkingHours(maNV, month, year) {
+    try {
+      const response = await axios.get('http://10.0.2.2:8080/attendanceSheet/getAll');
+      this.attendanceList = response.data.map(attenData => new AttendanceSheet(
+        attenData.id,
+        attenData.maNV,
+        attenData.date,
+        attenData.timein,
+        attenData.timeout,
+      ));
+      const filteredAttendance = this.attendanceList.filter(attendance => {
+        const attendanceDate = new Date(attendance.date);
+        return attendance.maNV === maNV &&
+          attendanceDate.getMonth() === month - 1 &&
+          attendanceDate.getFullYear() === year;
+      });
+
+      let totalHours = 0;
+      filteredAttendance.forEach(attendance => {
+        const timeIn = new Date(`2000-01-01T${attendance.timein}`);
+        const timeOut = new Date(`2000-01-01T${attendance.timeout}`);
+        const diffMillis = timeOut - timeIn;
+        const diffHours = diffMillis / (1000 * 60 * 60); // Số giờ làm việc
+        totalHours += diffHours;
+      });
+
+      return totalHours;
+    } catch (error) {
+      console.error(error);
+    }
+
+
+  }
 }
 
 export default ManageAttendance;

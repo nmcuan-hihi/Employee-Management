@@ -7,6 +7,7 @@ import EmployeeManagement from '../Screen/EmployeeManagement';
 import HomeNavigation from './HomeNavigation';
 import TinhLuongNavigation from './TinhLuongNavigation';
 import CrudNavigation from './CrudNavigation';
+import BangLuongThangNavigation from './BangLuongThangNavigation';
 const Tab = createBottomTabNavigator();
 export default function TabNavigation() {
     return (
@@ -45,6 +46,16 @@ export default function TabNavigation() {
                     <FontAwesome name="bookmark" size={24} color={color} />
                 )
             }}
+            />
+            <Tab.Screen name='bangluong' component={BangLuongThangNavigation}
+                options={{
+                    tabBarLabel: ({ color }) => (
+                        <Text style={{ color: color, fontSize: 15, marginTop: -7 }}>Bảng lương</Text>
+                    ),
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome name="dollar" size={24} color={color} />
+                    )
+                }}
             />
         </Tab.Navigator>
     )
