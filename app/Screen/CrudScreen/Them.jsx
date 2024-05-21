@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-
 import { StyleSheet, Text, View, TextInput, Button, Image, KeyboardAvoidingView, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
-
-import chucVus from '../../Model/QuanLyChucVu'; // Import QuanLiChucVu
-import arrEmployee from '../../Model/ArrEmployee';
+import QuanLiChucVu from '../../Model/QuanLyChucVu';
+import ArrEmployee from '../../Model/ArrEmployee';
 import Employee from '../../Model/Employee';
 
 export default function Them() {
@@ -14,14 +12,33 @@ export default function Them() {
     const [tenNv, setTenNv] = useState('');
     const [soDT, setSoDT] = useState('');
     const [diaChi, setDiaChi] = useState('');
-    const [selectedValue, setSelectedValue] = useState();
+    const [selectedValue, setSelectedValue] = useState('');
     const [mucLuong, setMucLuong] = useState('');
     const [message, setMessage] = useState('');
+    const [chucVus, setChucVus] = useState([]);
     const navigation = useNavigation();
+    const arrEmployee = new ArrEmployee();
+    const qlChucVu = new QuanLiChucVu()
+    useEffect(() => {
+        const fetchChucVu = async () => {
+            try {
+                const data = await qlChucVu.displayChucVuAPI();
+                if (Array.isArray(data) && data.length > 0) {
+                    setChucVus(data);
+                    console.log("Dữ liệu chức vụ:", data);
+                } else {
+                    console.error('Dữ liệu trả về từ API không hợp lệ:', data);
+                }
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu từ API:', error);
+            }
+        };
+        fetchChucVu();
+    }, []);
+
 
     const handleAddNhanVien = () => {
-       
-        const ktMaNv = arrEmployee.getEmployeeByMaNV(employee => employee.maNv === maNv.trim());        
+        const ktMaNv = arrEmployee.getEmployeeByMaNV(employee => employee.maNv === maNv.trim());
         const phoneNumberRegex = /^[0-9]*$/;
         let phoneNumber = soDT.trim();
         if (ktMaNv != null) {
@@ -35,27 +52,28 @@ export default function Them() {
                 if (phoneNumber.charAt(0) !== '0') {
                     phoneNumber = '0' + phoneNumber;
                     setSoDT(phoneNumber);
-                } else if(phoneNumber.charAt(0) === '0' && phoneNumber.length < 11){
-                  alert("Nhập thiếu số điện thoại")
-                }else{
+                } else if (phoneNumber.charAt(0) === '0' && phoneNumber.length < 11) {
+                    alert("Nhập thiếu số điện thoại")
+                } else {
                     setSoDT(phoneNumber);
                 }
             } else {
                 console.log(new Employee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong));
                 arrEmployee.addEmployee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong);
-                
+
                 setMessage('Nhân viên đã được thêm!');
                 setMaNv('');
                 setTenNv('');
                 setSoDT('');
                 setDiaChi('');
-               
+                setSelectedValue('')
                 setMucLuong('');
-               // navigation.navigate('manager', quanLi.displayEmployees());
+                navigation.navigate('CrudDanhSach');
             }
         }
     };
-    
+
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <View style={styles.imageBox}>
@@ -92,26 +110,18 @@ export default function Them() {
                     onChangeText={text => setDiaChi(text)}
                 />
                 <View style={styles.input}>
-                    {/* <Picker
-            selectedValue={selectedChucVu}
-            onValueChange={(itemValue) => setSelectedChucVu(itemValue)}>
-            {chucVus.displayChucVu().map((chucVu) => (
-              <Picker.Item key={chucVu.maCv} label={chucVu.tenCv} value={chucVu.maCv} />
-            ))}
-          </Picker> */}
-                    <Picker
-                        style={styles.viewpicker}
-                        selectedValue={selectedValue}
-                        onValueChange={(itemvalue, index) =>
+    <Picker
+        selectedValue={selectedValue}
+        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+    >
+        {chucVus.map((item) => (
+            <Picker.Item key={item.maCv} label={item.tenCv} value={item.maCv} />
+        ))}
+    </Picker>
+</View>
 
-                            setSelectedValue(itemvalue)
-                        }>
-                        {chucVus.displayChucVu().map((chucVu) => (
-                            <Picker.Item key={chucVu.maCv} label={chucVu.tenCv} value={chucVu.maCv} />
-                        ))}
-                    </Picker>
 
-                </View>
+
                 <TextInput
                     style={styles.input}
                     placeholder="Mức lương"
@@ -131,8 +141,8 @@ export default function Them() {
 }
 
 const styles = StyleSheet.create({
-    viewpicker:{
-        
+    viewpicker: {
+
     },
     container: {
         flex: 1,
@@ -208,3 +218,4 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
+

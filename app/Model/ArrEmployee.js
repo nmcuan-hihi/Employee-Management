@@ -7,18 +7,47 @@ class ArrEmployee {
     
   }
 
-  addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong) {
-    const newEmployee = new Employee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong);
-    this.employees.push(newEmployee);
+  async addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, tenChucVu, mucLuong) {
+    try {
+      const response = await axios.post(`http://10.0.2.2:8080/employee/add`, {
+        maNV,
+        pass,
+        tenNV,
+        soDT,
+        quyen,
+        diaChi,
+        tenChucVu,
+        mucLuong
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 
-  deleteEmployee(maNV) {
-    this.employees = this.employees.filter(emp => emp.maNV !== maNV);
+  async deleteEmployee(maNV) {
+    try {
+      await axios.delete(`http://10.0.2.2:8080/employee/delete/${maNV}`);
+      await this.getArremployeeAPI(); // Cập nhật lại danh sách sau khi xóa
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+    }
   }
 
   getEmployeeByMaNV(maNV) {
     return this.employees.find(emp => emp.maNV === maNV);
   }
+
+  async editEmployee(maNV, newInfo) {
+    try {
+      await axios.put(`http://10.0.2.2:8080/employee/edit/${maNV}`, newInfo);
+      await this.getArremployeeAPI(); // Cập nhật lại danh sách sau khi chỉnh sửa
+    } catch (error) {
+      console.error('Error editing employee:', error);
+    }
+  }
+
 
   getAllEmployees() {
     return this.employees;
