@@ -1,16 +1,13 @@
+import axios from 'axios';
 import Employee from './Employee';
+
 class ArrEmployee {
   constructor() {
-    this.employees = [
-      new Employee('NV001', '123', 'Nguyễn Văn A', '123789', 'admin', 'Hà Nội', 'Trưởng phòng', 10000000),
-      new Employee('NV002', '456', 'Trần Thị B', '987654321', 'user', 'Hồ Chí Minh', 'Nhân viên', 8000000),
-      new Employee('1', '1', 'Nguyễn Văn C', '123456789', 'admin', 'Đà Nẵng', 'Giám đốc', 15000000),
-      new Employee('2', '1', 'Nguyễn Văn D', '123456789', 'user', 'Cần Thơ', 'Thực tập', 5000000),
-    ];
+    this.employees = [];    
   }
 
-  addEmployee(maNV, pass, tenNV, soDT, quyen) {
-    const newEmployee = new Employee(maNV, pass, tenNV, soDT, quyen);
+  addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong) {
+    const newEmployee = new Employee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong);
     this.employees.push(newEmployee);
   }
 
@@ -25,7 +22,26 @@ class ArrEmployee {
   getAllEmployees() {
     return this.employees;
   }
+
+  async getArremployeeAPI() {
+    try {
+      const response = await axios.get('http://10.0.2.2:8080/employee/getAll');
+      this.employees = response.data.map(empData => new Employee(
+        empData.maNV,
+        empData.pass,
+        empData.tenNV,
+        empData.soDT,
+        empData.quyen,
+        empData.diaChi,
+        empData.tenChucVu,
+        empData.mucLuong
+      ));
+      return this.employees;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
 }
 
-const arrEmployee = new ArrEmployee();
-export default arrEmployee;
+export default ArrEmployee;

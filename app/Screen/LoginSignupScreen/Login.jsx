@@ -1,39 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
-import arrEmployee from '../../Model/ArrEmployee'
-import { useNavigation } from 'expo-router';
-const Login = ({ navigation }) => {
-    
+import ArrEmployee from '../../Model/ArrEmployee';
+import { useNavigation } from '@react-navigation/native';
+
+const Login = () => {
+    const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [employees, setEmployees] = useState([]);
+    const arrEmployee = new ArrEmployee();
+
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            try {              
+                const data = await arrEmployee.getArremployeeAPI();
+                setEmployees(data);
+            } catch (err) {
+                setError('Failed to fetch employees');
+            } 
+        };
+
+        fetchEmployees();
+    }, []);
 
     const handleLogin = () => {
-        const employee = arrEmployee.getEmployeeByMaNV(username);
-        console.log(employee);
+        const employee = employees.find(emp => emp.maNV === username);
+
         if (employee && employee.pass === password) {
             if (employee.quyen === 'admin') {
-                navigation.push('Manager')
+                navigation.push('Manager');
             } else if (employee.quyen === 'user') {
-                //  phải làm thêm truyền params user 
                 navigation.push('User');
             }
         } else {
             setError('Mã nhân viên hoặc mật khẩu không đúng');
-            alert(error + '')
+            alert('Mã nhân viên hoặc mật khẩu không đúng');
         }
     };
 
-
-    const handleLogin1 = () => {
+    const handleRegister = () => {
         navigation.navigate('Register');
     };
+  
 
     return (
         <View style={styles.container}>
             <Image source={require('../../../assets/logo.png')} style={styles.logo} />
-            <Text style={styles.title}>STT: 9 -Vũ Văn Đức - Nhóm 8</Text>
+            <Text style={styles.title}>STT: 9 - Vũ Văn Đức - Nhóm 8</Text>
             <Text style={styles.title}>Đăng nhập</Text>
+            {error ? <Text style={styles.error}>{error}</Text> : null}
             <TextInput
                 style={styles.input}
                 placeholder="Tên đăng nhập"
@@ -48,7 +65,7 @@ const Login = ({ navigation }) => {
                 secureTextEntry
             />
             <Button title="Đăng nhập" onPress={handleLogin} />
-            <Text style={styles.text} onPress={handleLogin1}>Chưa có tài khoản? Đăng ký</Text>
+            <Text style={styles.text} onPress={handleRegister}>Chưa có tài khoản? Đăng ký</Text>
         </View>
     );
 };
@@ -84,6 +101,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 20,
         paddingHorizontal: 10,
+    },
+    error: {
+        color: 'red',
+        marginBottom: 20,
     },
 });
 

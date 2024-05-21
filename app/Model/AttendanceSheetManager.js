@@ -1,44 +1,25 @@
+import axios from 'axios';
 import AttendanceSheet from './AttendanceSheet';
+import { Alert } from 'react-native';
 
 class ManageAttendance {
   constructor() {
-    this.attendanceList = [
-      new AttendanceSheet('NV001', '2024-04-01', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-02', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-03', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-04', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-05', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-06', '08:00', '17:00'),
-      new AttendanceSheet('NV001', '2024-04-07', '08:00', '17:00'),
-
-      new AttendanceSheet('NV002', '2024-04-01', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-02', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-03', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-04', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-05', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-06', '08:15', '17:15'),
-      new AttendanceSheet('NV002', '2024-04-07', '08:15', '17:15'),
-
-      new AttendanceSheet('NV003', '2024-04-01', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-02', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-03', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-04', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-05', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-06', '08:30', '17:30'),
-      new AttendanceSheet('NV003', '2024-04-07', '08:30', '17:30'),
-      
-      
-    ];
+    this.attendanceList = [];    
   }
 
   addAttendance(maNV, date, timein = null, timeout = null) {
+    // Check if the attendance for the given employee and date already exists
+    const existingAttendanceIndex = this.attendanceList.findIndex(attendance =>
+      attendance.maNV === maNV && attendance.date === date
+    );
 
-    // nếu đã có ngày chấm công này thì ghi đè lên
-    if(this.getAttendanceData(maNV, date) != null){
-      this.deleteAttendance(maNV, date) 
+    // If the attendance exists, update it; otherwise, add a new attendance
+    if (existingAttendanceIndex !== -1) {
+      this.attendanceList[existingAttendanceIndex] = new AttendanceSheet(maNV, date, timein, timeout);
+    } else {
+      const newAttendance = new AttendanceSheet(maNV, date, timein, timeout);
+      this.attendanceList.push(newAttendance);
     }
-    const newAttendance = new AttendanceSheet(maNV, date, timein, timeout);
-    this.attendanceList.push(newAttendance); // Thêm mới vào attendanceList
   }
 
   deleteAttendance(maNV, date) {
@@ -47,6 +28,7 @@ class ManageAttendance {
     );
   }
 
+  
   getAttendanceByMaNV(maNV) {
     return this.attendanceList.filter(attendance => attendance.maNV === maNV);
   }
@@ -66,10 +48,55 @@ class ManageAttendance {
     const workingDaysSet = new Set(filteredAttendance.map(attendance => attendance.date));
     return workingDaysSet.size;
   }
-  getAttendanceData(maNV, date) {
-    return this.attendanceList.filter(attendance => attendance.maNV === maNV && attendance.date === date);
+
+  async getAttendanceData(maNV, date) {
+    try {
+        const response = await axios.get(`http://10.0.2.2:8080/attendanceSheet/getByMaNVAndDate?maNV=${maNV}&date=${date}`);
+        const data = response.data.map(attenData => new AttendanceSheet(
+            attenData.id,
+            attenData.maNV,
+            attenData.date,
+            attenData.timein,
+            attenData.timeout
+        ));
+        return data;
+    } catch (error) {
+        console.error(error);
+        Alert.alert('Error', 'Failed to fetch attendance data. Please try again!');
+        throw error;
+    }
+}
+
+
+  async getArrAttendanceSheetAPI() {
+    try {
+      const response = await axios.get('http://10.0.2.2:8080/attendanceSheet/getAll');
+      this.attendanceList = response.data.map(attenData => new AttendanceSheet(
+        attenData.id,
+        attenData.maNV,
+        attenData.date,
+        attenData.timein,
+        attenData.timeout,     
+      ));
+      return this.attendanceList;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async addAttendanceSheetAPI(maNV, date, timein, timeout) {
+    try {
+      await axios.post('http://10.0.2.2:8080/attendanceSheet/add', {
+        maNV: maNV,
+        date: date,
+        timein: timein,
+        timeout: timeout,           
+      });
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Failed. Please try again!');
+    }
   }
 }
 
-const manageAttendance = new ManageAttendance();
-export default manageAttendance;
+export default ManageAttendance;

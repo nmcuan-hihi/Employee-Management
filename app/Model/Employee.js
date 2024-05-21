@@ -13,6 +13,9 @@ class Employee {
   getFullInfo() {
     return `Name: ${this.tenNV}, Phone: ${this.soDT}, Address: ${this.diaChi}, Position: ${this.tenChucVu}, Salary: ${this.mucLuong}, Rights: ${this.quyen}`;
   }
+  toString() {
+    return `Name: ${this.tenNV}, Phone: ${this.soDT}, Address: ${this.diaChi}, Position: ${this.tenChucVu}, Salary: ${this.mucLuong}, Rights: ${this.quyen}`;
+  }
 }
 
 export default Employee;

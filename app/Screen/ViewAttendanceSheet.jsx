@@ -1,40 +1,46 @@
-import { View, Text, Dimensions, ScrollView, FlatList, Pressable, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { LinearGradient } from 'expo-linear-gradient'
+import { View, Text, Dimensions, FlatList, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 import OnBack from '../Compoment/OnBack';
-import { AntDesign, Feather } from "@expo/vector-icons";
-const { width, height } = Dimensions.get('window');
-import manageAttendance from '../Model/AttendanceSheetManager';
-import arrEmployee from '../Model/ArrEmployee';
-import { DataTable } from 'react-native-paper';
-import TimeSheet from '../Compoment/TimeSheet';
-import moment from 'moment';
+import { AntDesign } from "@expo/vector-icons";
+import ArrEmployee from '../Model/ArrEmployee';
 import SheetItem from '../Compoment/ItemSheet';
-import axios from 'axios';
+import moment from 'moment';
 
+const { width, height } = Dimensions.get('window');
 
 export default function ViewAttendanceSheet() {
-    //  const [currentDate, setCurrentDate] = useState(moment());
     const [year, setYear] = useState(moment().year());
-    const employeesData = arrEmployee.getAllEmployees();
-    const nextYear = () => {
-        const nyear = year + 1;
-        setYear(nyear);
-    };
-    const prevYear = () => {
-        const prYear = year - 1;
-        setYear(prYear);
-    };
-    
-    return (
-        <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ width, height }}>
+    const [employeesData, setEmployeesData] = useState([]);
 
-            <View>
+    useEffect(() => {
+
+
+        loadEmployees();
+    }, []);
+    const loadEmployees = async () => {
+        const arrEmployee = new ArrEmployee();
+        const data = await arrEmployee.getArremployeeAPI();
+        setEmployeesData(data);
+    };
+    const nextYear = () => {
+        setYear(prevYear => prevYear + 1);
+    };
+
+    const prevYear = () => {
+        setYear(prevYear => prevYear - 1);
+    };
+
+    return (
+        <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <OnBack />
                 <Pressable>
                     <View
                         style={{
-                            flexDirection: "row", alignItems: "center", gap: 10, marginLeft: "auto", marginRight: "auto",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
                         }}
                     >
                         <AntDesign
@@ -43,7 +49,7 @@ export default function ViewAttendanceSheet() {
                             size={24}
                             color="blue"
                         />
-                        <Text style={{ fontSize: 20 }}>{year}</Text>
+                        <Text style={{ fontSize: 20, marginHorizontal: 10 }}>{year}</Text>
                         <AntDesign
                             onPress={nextYear}
                             name="right"
@@ -52,15 +58,14 @@ export default function ViewAttendanceSheet() {
                         />
                     </View>
                 </Pressable>
-                <View style={{ padding: 20 }}>
+                <View style={{ flex: 1, paddingHorizontal: 20 }}>
                     <FlatList
                         data={employeesData}
-                        //renderItem={sheetItem}    
                         renderItem={({ item }) => <SheetItem item={item} year={year} />}
+                        keyExtractor={(item) => item.maNV}
                     />
                 </View>
             </View>
         </LinearGradient>
-
-    )
+    );
 }

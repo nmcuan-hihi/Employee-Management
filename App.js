@@ -23,7 +23,7 @@ export default function App() {
           {/* màn hình của nhân viên  */}
           <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
 
-        </Stack.Navigator>
+        </Stack.Navigator>  
       </NavigationContainer>
       <FlashMessage style={{ marginTop: 35 }} position="top" />
       <StatusBar style="auto" />

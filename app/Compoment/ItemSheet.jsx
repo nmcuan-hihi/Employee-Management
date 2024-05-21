@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import TimeSheet from './TimeSheet';
-import manageAttendance from '../Model/AttendanceSheetManager';
 import { useNavigation } from '@react-navigation/native';
 
 const SheetItem = ({ item, year }) => {
@@ -42,7 +41,7 @@ const SheetItem = ({ item, year }) => {
         </View>
       </Pressable>
       {/* Bảng chấm công */}
-      <TimeSheet maNV={item?.maNV} year={year} manageAttendance={manageAttendance} />
+      <TimeSheet maNV={item?.maNV} year={year}/>
     </View>
   );
 };
