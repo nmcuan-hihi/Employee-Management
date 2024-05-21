@@ -1,12 +1,23 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import manageAttendance from '../../Model/AttendanceSheetManager';
 
 export default function PrintEmployee({ route }) {
   const { employee } = route.params;
+  const navigation = useNavigation();
+  const currentMonth = new Date().getMonth() + 1; // Lấy tháng hiện tại (getMonth() trả về giá trị từ 0 đến 11)
+  const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
+
+  // Lấy ngày công và tổng giờ làm việc từ ManageAttendance
+  const workingDays = manageAttendance.countWorkingDays(employee.maNV, currentMonth, currentYear);
+  const totalWorkingHours = manageAttendance.calculateTotalWorkingHours(employee.maNV, currentMonth, currentYear);
 
   return (
     <View style={styles.container}>
-     
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Image source={require('../../../assets/back_icon.png')} style={styles.backButtonImage} />
+      </TouchableOpacity>
       <Text style={styles.header}>Thông Tin Nhân Viên</Text>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
@@ -42,13 +53,19 @@ export default function PrintEmployee({ route }) {
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Ngày công:</Text>
         </View>
-        <Text style={styles.text}>{employee.ngayCong}</Text>
+        <Text style={styles.text}>{workingDays}</Text>
+      </View>
+      <View style={styles.infoContainer}>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Tổng giờ làm việc:</Text>
+        </View>
+        <Text style={styles.text}>{totalWorkingHours} giờ</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Tổng lương:</Text>
         </View>
-        <Text style={styles.text}>{(employee.mucLuong * employee.ngayCong).toFixed(0)} VND</Text>
+        <Text style={styles.text}>{(employee.mucLuong * workingDays).toFixed(0)} VND</Text>
       </View>
     </View>
   );
@@ -91,5 +108,15 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     textAlign: 'right',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    padding: 10,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
   },
 });

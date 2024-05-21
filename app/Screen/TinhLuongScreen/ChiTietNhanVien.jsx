@@ -1,17 +1,26 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import manageAttendance from '../../Model/AttendanceSheetManager';
 
 export default function ChiTietNhanVien({ route }) {
   const { employee } = route.params;
   const navigation = useNavigation();
+  const currentMonth = new Date().getMonth() + 1; // Lấy tháng hiện tại (getMonth() trả về giá trị từ 0 đến 11)
+  const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
 
+  // Lấy ngày công và tổng giờ làm việc từ ManageAttendance
+  const workingDays = manageAttendance.countWorkingDays(employee.maNV, currentMonth, currentYear);
+  const totalWorkingHours = manageAttendance.calculateTotalWorkingHours(employee.maNV, currentMonth, currentYear);
   const handlePrint = () => {
     navigation.navigate('PrintEmployee', { employee });
   };
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Image source={require('../../../assets/back_icon.png')} style={styles.backButtonImage} />
+      </TouchableOpacity>
       <View style={styles.imageBox}>
         <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
       </View>
@@ -25,6 +34,8 @@ export default function ChiTietNhanVien({ route }) {
           <Text style={styles.infoText}>Chức vụ: {employee.tenChucVu}</Text>
           <Text style={styles.infoText}>Số điện thoại: {employee.soDT}</Text>
           <Text style={styles.infoText}>Lương ngày: {employee.mucLuong}</Text>
+          <Text style={styles.infoText}>Ngày công trong tháng: {workingDays}</Text>
+          <Text style={styles.infoText}>Tổng giờ làm việc trong tháng: {totalWorkingHours} giờ</Text>
         </View>
       </View>
       <TouchableOpacity onPress={handlePrint} style={styles.printButton}>
@@ -47,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
-    right: '10%'
+    right: '10%',
   },
   imageBox: {
     borderWidth: 1,
@@ -78,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '60%',
     padding: 3,
-    marginBottom: 20, // Thêm margin dưới cùng để tránh che phủ nút in
+    marginBottom: 20,
   },
   info: {
     alignSelf: 'flex-start',
@@ -87,14 +98,14 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 20,
-    color: 'black', // Đổi màu chữ thành đen
+    color: 'black',
     alignItems: 'flex-start',
   },
   printButton: {
     position: 'absolute',
     bottom: 10,
     right: 10,
-    backgroundColor: 'green', // Thay đổi màu nền của nút in thành xanh lá cây
+    backgroundColor: 'green',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -102,5 +113,15 @@ const styles = StyleSheet.create({
   printButtonText: {
     color: 'white',
     fontSize: 18,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 40,
+    left: 10,
+    padding: 10,
+  },
+  backButtonImage: {
+    width: 30,
+    height: 30,
   },
 });

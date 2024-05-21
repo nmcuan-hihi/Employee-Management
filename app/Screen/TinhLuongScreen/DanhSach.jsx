@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import arrEmployee from '../../Model/ArrEmployee'; 
+import manageAttendance from '../../Model/AttendanceSheetManager';
 
 export default function DanhSach() {
   const navigation = useNavigation();
@@ -12,13 +13,19 @@ export default function DanhSach() {
   }, []);
 
   const updateEmployeeData = () => {
-    const employees = arrEmployee.getAllEmployees().map(emp => ({
-      ...emp,
-      ngayCong: emp.ngayCong || 0,
-      mucLuong: emp.mucLuong || 0,
-      tongLuong: 0,
-      isSalaryCalculated: false 
-    }));
+    const currentMonth = new Date().getMonth() + 1; 
+    const currentYear = new Date().getFullYear(); 
+
+    const employees = arrEmployee.getAllEmployees().map(emp => {
+      const workingDays = manageAttendance.countWorkingDays(emp.maNV, currentMonth, currentYear);
+      return {
+        ...emp,
+        ngayCong: workingDays,
+        mucLuong: emp.mucLuong || 0,
+        tongLuong: 0,
+        isSalaryCalculated: false 
+      };
+    });
     setNhanViens(employees);
   };
 
