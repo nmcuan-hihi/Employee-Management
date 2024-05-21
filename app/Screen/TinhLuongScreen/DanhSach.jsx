@@ -1,52 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet,Image,StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import arrEmployee from '../../Model/ArrEmployee'
-
+import arrEmployee from '../../Model/ArrEmployee'; 
+import manageAttendance from '../../Model/AttendanceSheetManager';
 
 export default function DanhSach() {
-  const navigation = useNavigation();  
- const employees = arrEmployee.getAllEmployees();
-//   useEffect(() => {
-//     updateEmployeeData();
-//   }, []);
+  const navigation = useNavigation();
+  const [nhanViens, setNhanViens] = useState([]);
 
-  
-   
+  useEffect(() => {
+    updateEmployeeData();
+  }, []);
 
+  const updateEmployeeData = () => {
+    const currentMonth = new Date().getMonth() + 1; 
+    const currentYear = new Date().getFullYear(); 
+
+    const employees = arrEmployee.getAllEmployees().map(emp => {
+      const workingDays = manageAttendance.countWorkingDays(emp.maNV, currentMonth, currentYear);
+      return {
+        ...emp,
+        ngayCong: workingDays,
+        mucLuong: emp.mucLuong || 0,
+        tongLuong: 0,
+        isSalaryCalculated: false 
+      };
+    });
+    setNhanViens(employees);
+  };
+
+  const tinhLuong = (employee) => {
+    const updatedEmployees = nhanViens.map(emp => {
+      if (emp.maNV === employee.maNV) {
+        if (emp.isSalaryCalculated) {
+          Alert.alert("Thông báo", "Lương đã được tính.");
+        } else {
+          const mucLuong = parseFloat(emp.mucLuong);
+          const ngayCong = parseFloat(emp.ngayCong);
+          if (!isNaN(mucLuong) && !isNaN(ngayCong)) {
+            const tongLuong = (mucLuong / 30) * ngayCong;
+            return { ...emp, tongLuong: tongLuong.toFixed(0), isSalaryCalculated: true };
+          } else {
+            Alert.alert("Thông báo", "Dữ liệu không hợp lệ");
+            return emp;
+          }
+        }
+      }
+      return emp;
+    });
+
+    setNhanViens(updatedEmployees);
+  };
 
   const renderEmployeeItem = ({ item }) => (
-    <TouchableOpacity 
-    onPress={() => navigation.navigate('navChiTietNV', { employee: item })
-    }>
-      <View key={item.maNV} style={styles.employeeItem}>
-        <Text>{item.maNV}</Text>
-        <Text>{item.tenNV}</Text>
-        <Text>{item.tenChucVu}</Text>
+    <TouchableOpacity onPress={() => navigation.navigate('navChiTietNV', { employee: item })}>
+      <View style={styles.employeeItem}>
+        <View style={styles.employeeInfo}>
+          <Text style={styles.employeeName}>{item.tenNV}</Text>
+          <Text style={styles.employeePosition}>{item.tenChucVu}</Text>
+          <Text style={styles.employeeAttendance}>Ngày công: {item.ngayCong}</Text>
+        </View>
+        <View style={styles.salaryButtonContainer}>
+          <Button title="Tính Lương" onPress={() => tinhLuong(item)} color="#4CAF50" />
+          <Text style={styles.salaryText}>{item.tongLuong ? item.tongLuong + ' VND' : 'Chưa tính'}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {/* <Text>{message}</Text> */}
       <View style={styles.imageBox}>
-        <Image style={styles.backgroundImage}  source={require('../../../assets/logo.png')} />
+        <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
       </View>
       <View style={styles.header}>
         <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
       </View>
-      <View style={styles.flatlistContainer}>
       <FlatList
         style={styles.flatlist}
-        data={employees}
+        data={nhanViens}
         renderItem={renderEmployeeItem}
         keyExtractor={item => item.maNV}
       />
-        <StatusBar style="auto" />
-      </View>
+      <StatusBar style="auto" />
     </View>
-    
   );
 }
 
@@ -56,14 +93,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  header: {
-    borderWidth: 1,
-    borderColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
-    right: '15%'
   },
   imageBox: {
     borderWidth: 1,
@@ -78,8 +107,16 @@ const styles = StyleSheet.create({
   backgroundImage: {
     padding: 0,
     borderWidth: 0,
-    width: '50%',
+    width: '20%',
     height: '15%',
+  },
+  header: {
+    borderWidth: 1,
+    borderColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+    right: '15%',
   },
   headerText: {
     color: 'blue',
@@ -87,13 +124,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
     padding: 5,
   },
-  flatlistContainer: {
-    borderWidth: 1,
-    width: '95%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '60%',
-    padding: 3,
+  flatlist: {
+    width: '100%',
   },
   employeeItem: {
     flexDirection: 'row',
@@ -104,10 +136,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '100%',
     borderColor: '#ccc',
-    fontSize: 25,
+    fontSize: 16,
   },
-  buttonImage: {
-    width: 20,
-    height: 20,
+  employeeInfo: {
+    flex: 1,
+  },
+  employeeName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  employeePosition: {
+    fontSize: 16,
+    color: '#555',
+  },
+  employeeAttendance: {
+    fontSize: 14,
+    color: '#777',
+  },
+  salaryButtonContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  salaryText: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4CAF50',
   },
 });
