@@ -14,8 +14,6 @@ export default function ViewAttendanceSheet() {
     const [employeesData, setEmployeesData] = useState([]);
 
     useEffect(() => {
-
-
         loadEmployees();
     }, []);
     const loadEmployees = async () => {

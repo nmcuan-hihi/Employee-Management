@@ -10,37 +10,44 @@ const manageAttendance = new ManageAttendance();
 
 export default function TableAttendance({ maNV, month, year }) {
   const daysInMonth = Array.from({ length: 31 }, (_, i) => i + 1);
-  const [attendanceData, setAttendanceData] = useState(Array(31).fill({ timein: '-', timeout: '-' }));
+  const [attendanceData, setAttendanceData] = useState(Array(31).fill({ id: null, timein: '-', timeout: '-' }));
 
   useEffect(() => {
     loadData();
+    console.log(daysInMonth);
   }, [maNV, month, year]);
 
   const loadData = async () => {
-    await manageAttendance.getArrAttendanceSheetAPI(); 
-    const newData = daysInMonth.map(async (day) => {
-        const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
-        const dayAttendance = await manageAttendance.getAttendanceData(maNV, date.format('YYYY-MM-DD'));
-        return {
-            timein: dayAttendance.length > 0 ? dayAttendance[0].timein : '-',
-            timeout: dayAttendance.length > 0 ? dayAttendance[0].timeout : '-'
-        };
-    });
-    setAttendanceData(await Promise.all(newData));
-};
-
+       //await manageAttendance.getArrAttendanceSheetAPI(); // get danh sách data chấm chông từ api
+    // lấy data chám công
+      const newData = await Promise.all(daysInMonth.map(async (day) => {
+      const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD'); // lấy ngày của từng cột
+      const dayAttendance = await manageAttendance.getAttendanceData(maNV, date.format('YYYY-MM-DD')); // lấy giwof vào giờ ra của từng n=gày
+      return {
+        id: dayAttendance.length > 0 ? dayAttendance[0].id : null,
+        timein: dayAttendance.length > 0 ? dayAttendance[0].timein : '-',
+        timeout: dayAttendance.length > 0 ? dayAttendance[0].timeout : '-'
+      };
+    }));
+    setAttendanceData(newData);
+  };
 
   const handleDeleteRow = async (day) => {
-    const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
-    manageAttendance.deleteAttendance(maNV, date.format('YYYY-MM-DD'));
-    const newData = [...attendanceData];
-    newData[day - 1] = { timein: '-', timeout: '-' };
-    setAttendanceData(newData);
-    showMessage({
-      message: "Success",
-      description: "Delete attendance successfully!",
-      type: "success",
-    });
+    const viTri = attendanceData[day - 1]; // ngày x thì sẽ lưu ở vị trí x -1 vì mangr bawts đầu từ 0
+    if (viTri.id) {
+      await manageAttendance.deleteAttendance(viTri.id);
+      const newData = [...attendanceData];
+      // cập nhật lại hiển thị bangr
+      newData[day - 1] = { id: null, timein: '-', timeout: '-' };
+      setAttendanceData(newData);
+      // showMessage({
+      //   message: "Success",
+      //   description: "Delete attendance successfully!",
+      //   type: "success",
+      // });
+    } else {
+      Alert.alert('Error', 'Attendance record not found.');
+    }
   };
 
   return (
@@ -70,7 +77,6 @@ export default function TableAttendance({ maNV, month, year }) {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   headertable: {
