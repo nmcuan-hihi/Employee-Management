@@ -1,96 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import { Ionicons,FontAwesome5  } from '@expo/vector-icons';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert ,Image} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import ArrEmployee from '../../Model/ArrEmployee';
 
-import { useNavigation } from '@react-navigation/native';
-import chucVus from '../../Model/QuanLyChucVu';
-import arrEmployee from '../../Model/ArrEmployee'
-export default function CrudDanhSach() {
+const arrEmployee = new ArrEmployee();
+
+const CrudDanhSach = () => {
   const navigation = useNavigation();
+  const [nhanViens, setNhanViens] = useState([]);
 
- 
-  const nhanViens = arrEmployee.getAllEmployees();
-
-
-  const handleDeleteNhanVien = (maNv) => {
-    const employee = quanLi.findEmployeeById(maNv);
-    if (employee) {
-      Alert.alert(
-        'Xác nhận xóa',
-        `Bạn có chắc chắn muốn xóa nhân viên ${employee.tenNV} không?`,
-        [
-          {
-            text: 'Hủy',
-            style: 'cancel',
-          },
-          {
-            text: 'Xóa',
-            onPress: () => {
-              quanLi.deleteNhanVien(maNv);
-              updateEmployeeData();
-             // setMessage('Xóa thành công');
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    } else {
-      setMessage(`Không tìm thấy nhân viên có mã ${maNv}`);
-    }
+  const fetchEmployees = async () => {
+    const employees = await arrEmployee.getArremployeeAPI();
+    setNhanViens(employees);
   };
 
-  // const handleEditNhanVien = (maNv) => {
-  //   // const nv = maNv.toString()
-  //   // console.log("=="+nv)
-  //   // const nhanVien = quanLi.findEmployeeById()
-  //   // if (nhanVien) {
-  //   //   navigation.navigate('Edit', { nhanVien: {...nhanVien, tenChucVu: nhanVien.tenChucVu} });
-  //   // } else {
-  //   //   setMessage(`Không tìm thấy nhân viên có mã ${maNv}`);
-  //   //   console.log('k tim thấy')
+  useFocusEffect(
+    useCallback(() => {
+      fetchEmployees();
+    }, [])
+  );
 
-  //   // }
-  //  // navigation.navigate('Edit', { nhanVien: maNv });
-  // };
-  
+  const handleDeleteNhanVien = async (maNV) => {
+    Alert.alert(
+      'Xác nhận xóa',
+      `Bạn có chắc chắn muốn xóa nhân viên có mã ${maNV} không?`,
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Xóa',
+          onPress: async () => {
+            const result = await arrEmployee.deleteEmployee(maNV);
+            if (result) {
+              fetchEmployees();
+            } else {
+              fetchEmployees();
+              Alert.alert('Xóa nhân viên thành công.');
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
-
-  
+  const getInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : '?';
+  };
 
   const renderEmployeeItem = ({ item }) => (
-    <View key={item.maNV} style={styles.employeeItem}>
-      <Text>{item.maNV}</Text>
-      <Text>{item.tenNV}</Text>
-      <Text>{item.tenChucVu}</Text>
-      <TouchableOpacity 
-      onPress={()=>navigation.push('navedit', {ma:item.maNv})}
-      >
-        <FontAwesome5 name="edit" size={24} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => handleDeleteNhanVien(item.maNv)}>
-      <Ionicons name="remove-circle-outline" size={24} color="black" />
-      </TouchableOpacity>
+  <View key={item.maNV} style={styles.employeeItem}>
+    <View style={[styles.initialCircle, { backgroundColor: '#8a2be2' }]}>
+      <Text style={styles.initialText}>{getInitial(item.tenNV)}</Text>
     </View>
-  );
+    <View style={{ flexDirection: 'column', flex: 1 }}>
+  <Text style={{ marginBottom: 5, fontWeight: 'bold', color: 'black' }}>{item.maNV}</Text>
+  <Text style={{ color: 'black' }}>{item.tenNV}</Text>
+</View>
+
+    <TouchableOpacity onPress={() => navigation.push('Edit', { ma: item.maNV })}>
+      <FontAwesome5 name="edit" size={24} color="black" />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => handleDeleteNhanVien(item.maNV)}>
+      <Ionicons name="remove-circle-outline" size={24} color="black" />
+    </TouchableOpacity>
+  </View>
+);
+
 
   return (
     <View style={styles.container}>
-      {/* <Text>{message}</Text> */}
       <View style={styles.imageBox}>
         <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
       </View>
       <View style={styles.header}>
         <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
-       
+        <TouchableOpacity onPress={() => navigation.navigate('Them')}>
+          <Ionicons name="person-add" size={34} color="blue" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-         onPress={() => navigation.navigate('Them')
-        }
-      >
-         <Ionicons name="person-add" size={34} color="blue" />
-      </TouchableOpacity>
-     
+
       <View style={styles.flatlistContainer}>
         <FlatList
           style={styles.flatlist}
@@ -102,7 +95,7 @@ export default function CrudDanhSach() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -117,7 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
-    right: '15%'
+    flexDirection: 'row',
   },
   imageBox: {
     borderWidth: 1,
@@ -140,6 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     padding: 5,
+    marginRight: 10,
   },
   flatlistContainer: {
     borderWidth: 1,
@@ -158,12 +152,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '100%',
     borderColor: '#ccc',
-    fontSize: 25,
-    marginEnd:0,
+  },
+  initialCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#007bff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  initialText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   buttonImage: {
     width: 20,
     height: 20,
-    paddingEnd:3,
+    paddingEnd: 3,
   },
 });
+
+export default CrudDanhSach;

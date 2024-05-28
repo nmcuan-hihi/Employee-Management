@@ -6,20 +6,31 @@ class ArrEmployee {
     this.employees = [];
   }
 
-  async addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong) {
-    const newEmployee = new Employee(maNV, pass, tenNV, soDT, quyen, diaChi, viTri, luong);
+  async addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, tenChucVu, mucLuong) {
     try {
-      const response = await axios.post('http://10.0.2.2:8080/employee/add', newEmployee);
-      if (response.status === 200 || response.status === 201) {
-        this.employees.push(newEmployee);
-        return true;  // Trả về trạng thái thành công
-      } else {
-        console.error('Lỗi khi thêm nhân viên:', response.status, response.statusText);
-        return false;
-      }
+      const response = await axios.post(`http://10.0.2.2:8080/employee/add`, {
+        maNV,
+        pass,
+        tenNV,
+        soDT,
+        quyen,
+        diaChi,
+        tenChucVu,
+        mucLuong
+      });
+      return response.data;
     } catch (error) {
-      console.error('Lỗi khi thêm nhân viên:', error);
-      return false;
+      console.error(error);
+      return null;
+    }
+  }
+
+  async deleteEmployee(maNV) {
+    try {
+      await axios.delete(`http://10.0.2.2:8080/employee/delete/${maNV}`);
+      await this.getArremployeeAPI(); // Cập nhật lại danh sách sau khi xóa
+    } catch (error) {
+      console.error('Error deleting employee:', error);
     }
   }
 
@@ -74,6 +85,7 @@ class ArrEmployee {
       return [];
     }
   }
+
 }
 
 export default ArrEmployee;
