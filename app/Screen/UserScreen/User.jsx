@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ArrEmployee from '../../Model/ArrEmployee';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import Employee from '../../Model/Employee';
 
 const ThongTinNhanVien = ({ navigation, route }) => {
   const [employee, setEmployee] = useState(null);
@@ -10,13 +10,22 @@ const ThongTinNhanVien = ({ navigation, route }) => {
   useEffect(() => {
     const fetchEmployee = async () => {
       const { username } = route.params;
+      console.log(username); // Log để kiểm tra username
       const arrEmployee = new ArrEmployee();
-      const employeeData = await arrEmployee.getEmployeeByMaNV(username); // Sử dụng await để đợi kết quả trả về
+      const employeeData = await arrEmployee.getEmployeeByMaNV(username);
+      
       setEmployee(employeeData);
+      console.log(employeeData); // Log để kiểm tra employeeData
     };
 
     fetchEmployee();
   }, [route.params]);
+
+  useEffect(() => {
+    if (employee) {
+      console.log(employee); // Log ra employee khi nó thay đổi
+    }
+  }, [employee]);
 
   if (!employee) {
     return (

@@ -30,19 +30,24 @@ class ArrEmployee {
   async getEmployeeByMaNV(maNV) {
     try {
       const response = await axios.get(`http://10.0.2.2:8080/employee/getByMaNV/${maNV}`);
-      const empData = response.data;
-      return new Employee(
-        empData.maNV,
-        empData.pass,
-        empData.tenNV,
-        empData.soDT,
-        empData.quyen,
-        empData.diaChi,
-        empData.tenChucVu,
-        empData.mucLuong
-      );
+      if (response.data && response.data.length > 0) {
+        const empData = response.data[0]; // Lấy nhân viên đầu tiên từ mảng trả về
+        const employee = new Employee(
+          empData.maNV,
+          empData.pass,
+          empData.tenNV,
+          empData.soDT,
+          empData.quyen,
+          empData.diaChi,
+          empData.tenChucVu,
+          empData.mucLuong
+        );
+        return employee;
+      } else {
+        return null;
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Lỗi khi lấy nhân viên:', error);
       return null;
     }
   }
