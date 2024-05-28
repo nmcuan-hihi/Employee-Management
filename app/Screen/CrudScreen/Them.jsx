@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Text, View, TextInput, Button, Image, KeyboardAvoidingView, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';

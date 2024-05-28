@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import QuanLiChucVu from '../../Model/QuanLyChucVu';
+
 export default function Edit() {
     const route = useRoute();
     const { ma } = route.params;
@@ -15,15 +16,13 @@ export default function Edit() {
     const [diaChi, setDiaChi] = useState('');
     const [chucVus, setChucVus] = useState([]);
     const [chucVu, setChucVu] = useState('');
-    
     const [mucLuong, setMucLuong] = useState('');
-    
     const [message, setMessage] = useState('');
     const navigation = useNavigation();
-    const arrEmployee = new ArrEmployee()
+    const arrEmployee = new ArrEmployee();
     const qlChucVu = new QuanLiChucVu();
-    useEffect(() => {
 
+    useEffect(() => {
         const fetchChucVu = async () => {
             try {
                 const data = await qlChucVu.displayChucVuAPI();
@@ -37,58 +36,67 @@ export default function Edit() {
                 console.error('Lỗi khi lấy dữ liệu từ API:', error);
             }
         };
+
         fetchChucVu();
+
         const fetchEmployeeData = async () => {
             const nvc = await arrEmployee.getEmployeeByMaNVApi(ma);
-            console.log(nvc)
+            console.log("Dữ liệu nhân viên:", nvc);
             if (nvc) {
                 setMaNv(nvc.maNV);
                 setTenNv(nvc.tenNV);
                 setPass('123');
                 setSoDT(nvc.soDT);
-                setQuyen('user')
+                setQuyen('user');
                 setDiaChi(nvc.diaChi);
-                setChucVu(nvc.tenChucVu);
+                setChucVu(nvc.tenChucVu || ''); // Đặt giá trị mặc định cho chucVu
                 setMucLuong(nvc.mucLuong ? nvc.mucLuong.toString() : ''); // Đặt giá trị mặc định cho mucLuong
             } else {
                 console.error("Dữ liệu nhân viên không hợp lệ");
             }
         };
+
         fetchEmployeeData();
     }, [ma]);
 
     const handleEditNhanVien = async () => {
-        if (!tenNV || !soDT || !diaChi || !mucLuong) {
+        if (!tenNV || !soDT || !diaChi || !mucLuong || !chucVu) {
             setMessage('Vui lòng điền đầy đủ thông tin');
             return;
         }
     
-        // Tạo đối tượng dữ liệu mới để cập nhật
         const updatedInfo = {
             pass,
             tenNV,
             soDT,
             quyen,
             diaChi,
-            mucLuong: parseInt(mucLuong, 10)
+            mucLuong: parseInt(mucLuong, 10),
+            tenChucVu: chucVu  // Đảm bảo gửi tenChucVu
         };
     
-        // Kiểm tra nếu chucVu không phải là null thì thêm vào dữ liệu cần cập nhật
-        if (chucVu !== null) {
-            updatedInfo.chucVu = chucVu;
-        }
+        console.log("Thông tin cập nhật:", updatedInfo); // Kiểm tra log thông tin trước khi gửi
     
         try {
-            // Gọi hàm editEmployee để cập nhật thông tin nhân viên
-            await arrEmployee.editEmployee(ma, updatedInfo);
-            setMessage('Cập nhật nhân viên thành công');
-            navigation.navigate('CrudDanhSach', { refresh: true });
+            const response = await fetch(`http://10.0.2.2:8080/employee/update/${ma}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedInfo),
+            });
+    
+            if (response.ok) {
+                setMessage('Cập nhật nhân viên thành công');
+                navigation.navigate('CrudDanhSach', { refresh: true });
+            } else {
+                setMessage('Đã xảy ra lỗi khi cập nhật nhân viên');
+            }
         } catch (error) {
             console.error('Error editing employee:', error);
             setMessage('Đã xảy ra lỗi khi cập nhật nhân viên');
         }
     };
-    
     
 
     return (
