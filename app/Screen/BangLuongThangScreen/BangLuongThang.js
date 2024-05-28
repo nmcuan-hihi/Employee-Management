@@ -30,7 +30,7 @@ const currentMonth = new Date().getMonth();
     const calculateSalary = (totalHours, mucLuong) => {
       // Đặt quy tắc tính lương của công ty 
       const luongThang = totalHours * mucLuong / 234;
-      return luongThang ;
+      return luongThang.toFixed(0) ;
     };
 
 

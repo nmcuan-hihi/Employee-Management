@@ -10,8 +10,7 @@ export default function PrintEmployee({ route }) {
   const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
 
   // Lấy ngày công và tổng giờ làm việc từ ManageAttendance
-  const workingDays = manageAttendance.countWorkingDays(employee.maNV, currentMonth, currentYear);
-  const totalWorkingHours = manageAttendance.calculateTotalWorkingHours(employee.maNV, currentMonth, currentYear);
+  
 
   return (
     <View style={styles.container}>
@@ -42,27 +41,21 @@ export default function PrintEmployee({ route }) {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Lương tháng:</Text>
+          <Text style={styles.label}>Lương cơ bản:</Text>
         </View>
-        <Text style={styles.text}>{employee.mucLuong}</Text>
+        <Text style={styles.text}>{employee.mucLuong} VND</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Ngày công:</Text>
+          <Text style={styles.label}>Tổng giờ làm :</Text>
         </View>
-        <Text style={styles.text}>{workingDays}</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <View style={styles.labelContainer}>
-          <Text style={styles.label}>Tổng giờ làm việc:</Text>
-        </View>
-        <Text style={styles.text}>{totalWorkingHours} giờ</Text>
+        <Text style={styles.text}>{employee.gioCong} giờ</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.labelContainer}>
           <Text style={styles.label}>Tổng lương:</Text>
         </View>
-        <Text style={styles.text}>{(employee.mucLuong * workingDays).toFixed(0)} VND</Text>
+        <Text style={styles.text}>{employee.tongLuong} VND</Text>
       </View>
     </View>
   );

@@ -10,17 +10,13 @@ export default function ChiTietNhanVien({ route }) {
   const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
 
   // Lấy ngày công và tổng giờ làm việc từ ManageAttendance
-  const workingDays = manageAttendance.countWorkingDays(employee.maNV, currentMonth, currentYear);
-  const totalWorkingHours = manageAttendance.calculateTotalWorkingHours(employee.maNV, currentMonth, currentYear);
+  
   const handlePrint = () => {
     navigation.navigate('PrintEmployee', { employee });
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.imageBox}>
-        <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
-      </View>
       <View style={styles.header}>
         <Text style={styles.headerText}>Thông Tin Nhân Viên: {employee.tenNv}</Text>
       </View>
@@ -30,9 +26,10 @@ export default function ChiTietNhanVien({ route }) {
           <Text style={styles.infoText}>Tên nhân viên: {employee.tenNV}</Text>
           <Text style={styles.infoText}>Chức vụ: {employee.tenChucVu}</Text>
           <Text style={styles.infoText}>Số điện thoại: {employee.soDT}</Text>
-          <Text style={styles.infoText}>Lương ngày: {employee.mucLuong}</Text>
-          <Text style={styles.infoText}>Ngày công trong tháng: {workingDays}</Text>
-          <Text style={styles.infoText}>Tổng giờ làm việc trong tháng: {totalWorkingHours} giờ</Text>
+          <Text style={styles.infoText}>Lương cơ bản: {employee.mucLuong} vnđ</Text>
+          <Text style={styles.infoText}>Tổng giờ làm: {employee.gioCong} giờ</Text>
+          <Text style={styles.infoText}>Tổng lương: {employee.tongLuong} vnđ</Text>
+
         </View>
       </View>
       <TouchableOpacity onPress={handlePrint} style={styles.printButton}>

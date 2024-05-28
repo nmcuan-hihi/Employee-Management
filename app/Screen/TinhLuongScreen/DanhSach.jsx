@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import arrEmployee from '../../Model/ArrEmployee'; 
-import manageAttendance from '../../Model/AttendanceSheetManager';
+import ArrEmployee from '../../Model/ArrEmployee';
+import ManageAttendance from '../../Model/AttendanceSheetManager';
 
 export default function DanhSach() {
   const navigation = useNavigation();
   const [nhanViens, setNhanViens] = useState([]);
+  const currentMonth = new Date().getMonth() + 1; 
+  const currentYear = new Date().getFullYear(); 
 
+  const arrEmployee = new ArrEmployee();
+  const manageAttendance = new ManageAttendance();
   useEffect(() => {
-    updateEmployeeData();
+   
+    fetchEmployees();
   }, []);
 
-  const updateEmployeeData = () => {
-    const currentMonth = new Date().getMonth() + 1; 
-    const currentYear = new Date().getFullYear(); 
-
-    const employees = arrEmployee.getAllEmployees().map(emp => {
-      const workingDays = manageAttendance.countWorkingDays(emp.maNV, currentMonth, currentYear);
+  const fetchEmployees = async () => {
+    const employees = await arrEmployee.getArremployeeAPI();
+    const list = await Promise.all(employees.map(async (emp) => {
+      const workingDays = await manageAttendance.calculateTotalWorkingHours(emp.maNV, currentMonth, currentYear);
       return {
         ...emp,
-        ngayCong: workingDays,
+        gioCong: workingDays,
         mucLuong: emp.mucLuong || 0,
-        tongLuong: 0,
         isSalaryCalculated: false 
       };
-    });
-    setNhanViens(employees);
+    }));
+    setNhanViens(list);
+
+    
   };
 
-  const tinhLuong = (employee) => {
+   const tinhLuong = (employee) => {
     const updatedEmployees = nhanViens.map(emp => {
       if (emp.maNV === employee.maNV) {
         if (emp.isSalaryCalculated) {
           Alert.alert("Thông báo", "Lương đã được tính.");
         } else {
           const mucLuong = parseFloat(emp.mucLuong);
-          const ngayCong = parseFloat(emp.ngayCong);
-          if (!isNaN(mucLuong) && !isNaN(ngayCong)) {
-            const tongLuong = (mucLuong / 30) * ngayCong;
+          const gioCong = parseFloat(emp.gioCong);
+          if (!isNaN(mucLuong) && !isNaN(gioCong)) {
+            const tongLuong = (mucLuong / 234) * gioCong;
             return { ...emp, tongLuong: tongLuong.toFixed(0), isSalaryCalculated: true };
           } else {
             Alert.alert("Thông báo", "Dữ liệu không hợp lệ");
@@ -52,13 +56,22 @@ export default function DanhSach() {
     setNhanViens(updatedEmployees);
   };
 
+ 
+
+  const handleEmployeePress = (employee) => {
+    console.log('Thông tin nhân viên:', employee);
+    navigation.navigate('navChiTietNV', { employee: employee }); 
+  };
+
   const renderEmployeeItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('navChiTietNV', { employee: item })}>
+    <TouchableOpacity onPress={() => handleEmployeePress(item)}>
+
+
       <View style={styles.employeeItem}>
         <View style={styles.employeeInfo}>
           <Text style={styles.employeeName}>{item.tenNV}</Text>
           <Text style={styles.employeePosition}>{item.tenChucVu}</Text>
-          <Text style={styles.employeeAttendance}>Ngày công: {item.ngayCong}</Text>
+          <Text style={styles.employeeAttendance}>Tổng giờ làm: {item.gioCong}</Text>
         </View>
         <View style={styles.salaryButtonContainer}>
           <Button title="Tính Lương" onPress={() => tinhLuong(item)} color="#4CAF50" />
