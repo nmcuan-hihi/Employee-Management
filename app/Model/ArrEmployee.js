@@ -29,7 +29,7 @@ class ArrEmployee {
 
   async getEmployeeByMaNV(maNV) {
     try {
-      const response = await axios.get(`http://10.0.2.2:8080/employee/getByMaNV/${maNV}`);
+      const response = await axios.get('http://10.0.2.2:8080/employee/getByMaNV/'+maNV);
       if (response.data && response.data.length > 0) {
         const empData = response.data[0]; // Lấy nhân viên đầu tiên từ mảng trả về
         const employee = new Employee(
