@@ -23,7 +23,7 @@ export default function DanhSach() {
       const workingDays = await manageAttendance.calculateTotalWorkingHours(emp.maNV, currentMonth, currentYear);
       return {
         ...emp,
-        gioCong: workingDays,
+        gioCong: workingDays.toFixed(2),
         mucLuong: emp.mucLuong || 0,
         isSalaryCalculated: false 
       };

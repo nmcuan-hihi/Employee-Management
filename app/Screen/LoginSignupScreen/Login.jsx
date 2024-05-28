@@ -36,7 +36,7 @@ const Login = () => {
             if (employee.quyen === 'admin') {
                 navigation.push('Manager');
             } else if (employee.quyen === 'user') {
-                navigation.push('User',{ username: username });
+                navigation.push('UserNavigation',{ username: username });
             }
         } else {
             setError('Mã nhân viên hoặc mật khẩu không đúng');
