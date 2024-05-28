@@ -11,28 +11,32 @@ const Login = () => {
     const [employees, setEmployees] = useState([]);
     const arrEmployee = new ArrEmployee();
 
+    // Function to fetch latest employees data
+    const fetchLatestEmployees = async () => {
+        try {              
+            const data = await arrEmployee.getArremployeeAPI();
+            setEmployees(data);
+        } catch (err) {
+            setError('Failed to fetch employees');
+        } 
+    };
 
+    // Fetch latest employees data on component mount
     useEffect(() => {
-        const fetchEmployees = async () => {
-            try {              
-                const data = await arrEmployee.getArremployeeAPI();
-                setEmployees(data);
-            } catch (err) {
-                setError('Failed to fetch employees');
-            } 
-        };
-
-        fetchEmployees();
+        fetchLatestEmployees();
     }, []);
 
     const handleLogin = () => {
+        // Fetch latest employees data before login
+        fetchLatestEmployees();
+
         const employee = employees.find(emp => emp.maNV === username);
 
         if (employee && employee.pass === password) {
             if (employee.quyen === 'admin') {
                 navigation.push('Manager');
             } else if (employee.quyen === 'user') {
-                navigation.push('User');
+                navigation.push('User',{ username: username });
             }
         } else {
             setError('Mã nhân viên hoặc mật khẩu không đúng');
