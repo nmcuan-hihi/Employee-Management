@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback  } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
-
+import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function DanhSach() {
@@ -25,7 +25,8 @@ const currentMonth = new Date().getMonth();
 
   const yearList = Array.from({ length: currentYear - 2019 }, (value, index) => 2020 + index);
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
 
     const calculateSalary = (totalHours, mucLuong) => {
       // Đặt quy tắc tính lương của công ty 
@@ -77,7 +78,7 @@ const currentMonth = new Date().getMonth();
 
     fetchEmployeeData();
 
-  }, [selectedMonth, selectedYear, sortOption]);
+  }, [selectedMonth, selectedYear, sortOption]));
 
 
 
