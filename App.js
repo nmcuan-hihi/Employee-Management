@@ -7,7 +7,7 @@ import Login from './app/Screen/LoginSignupScreen/Login';
 import RegisterScreen from './app/Screen/LoginSignupScreen/SignUp';
 import TabNavigation from './app/Navigation/TabNavigation';
 import User from './app/Screen/UserScreen/User';
-
+import UserNavigation from './app/Navigation/UserNavigation';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -21,7 +21,7 @@ export default function App() {
           <Stack.Screen name="Manager" component={TabNavigation} options={{ headerShown: false }} />
 
           {/* màn hình của nhân viên  */}
-          <Stack.Screen name="User" component={User} options={{ headerShown: false }} />
+          <Stack.Screen name="UserNavigation" component={UserNavigation} options={{ headerShown: false }} />
 
         </Stack.Navigator>  
       </NavigationContainer>
