@@ -34,14 +34,35 @@ class ArrEmployee {
       console.error('Error deleting employee:', error);
     }
   }
-
   getEmployeeByMaNV(maNV) {
     return this.employees.find(emp => emp.maNV === maNV);
   }
+  async getEmployeeByMaNVApi(maNV) {
+    try {
+        const response = await axios.get(`http://10.0.2.2:8080/employee/${maNV}`);
+        const empData = response.data;
+
+        // Trả về đối tượng Employee từ dữ liệu nhận được
+        return new Employee(
+            empData.maNV,
+            empData.pass,
+            empData.tenNV,
+            empData.soDT,
+            empData.quyen,
+            empData.diaChi,
+            empData.tenChucVu,
+            empData.mucLuong
+        );
+    } catch (error) {
+        console.error('Error fetching employee by maNV:', error);
+        return null;
+    }
+}
+
 
   async editEmployee(maNV, newInfo) {
     try {
-      await axios.put(`http://10.0.2.2:8080/employee/edit/${maNV}`, newInfo);
+      await axios.put(`http://10.0.2.2:8080/employee/update/${maNV}`, newInfo);
       await this.getArremployeeAPI(); // Cập nhật lại danh sách sau khi chỉnh sửa
     } catch (error) {
       console.error('Error editing employee:', error);
@@ -72,6 +93,7 @@ class ArrEmployee {
       return [];
     }
   }
+
 }
 
 export default ArrEmployee;

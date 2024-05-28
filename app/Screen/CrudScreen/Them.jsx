@@ -18,7 +18,8 @@ export default function Them() {
     const [chucVus, setChucVus] = useState([]);
     const navigation = useNavigation();
     const arrEmployee = new ArrEmployee();
-    const qlChucVu = new QuanLiChucVu()
+    const qlChucVu = new QuanLiChucVu();
+
     useEffect(() => {
         const fetchChucVu = async () => {
             try {
@@ -36,15 +37,15 @@ export default function Them() {
         fetchChucVu();
     }, []);
 
-
-    const handleAddNhanVien = () => {
-        const ktMaNv = arrEmployee.getEmployeeByMaNV(employee => employee.maNv === maNv.trim());
+    const handleAddNhanVien = async () => {
+        const existingEmployee = await arrEmployee.getEmployeeByMaNV(maNv.trim());
         const phoneNumberRegex = /^[0-9]*$/;
         let phoneNumber = soDT.trim();
-        if (ktMaNv != null) {
+
+        if (existingEmployee) {
             alert("Mã nhân viên đã tồn tại");
         } else {
-            if ((maNv.trim() === '') || tenNv.trim() === '' || phoneNumber === '') {
+            if (maNv.trim() === '' || tenNv.trim() === '' || phoneNumber === '') {
                 alert("Chưa nhập đủ các trường");
             } else if (!phoneNumberRegex.test(phoneNumber) || (phoneNumber.length !== 10 && phoneNumber.length !== 11)) {
                 alert("Nhập lại số điện thoại");
@@ -53,26 +54,25 @@ export default function Them() {
                     phoneNumber = '0' + phoneNumber;
                     setSoDT(phoneNumber);
                 } else if (phoneNumber.charAt(0) === '0' && phoneNumber.length < 11) {
-                    alert("Nhập thiếu số điện thoại")
+                    alert("Nhập thiếu số điện thoại");
                 } else {
                     setSoDT(phoneNumber);
                 }
             } else {
                 console.log(new Employee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong));
-                arrEmployee.addEmployee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong);
+                await arrEmployee.addEmployee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong);
 
                 setMessage('Nhân viên đã được thêm!');
                 setMaNv('');
                 setTenNv('');
                 setSoDT('');
                 setDiaChi('');
-                setSelectedValue('')
+                setSelectedValue('');
                 setMucLuong('');
-                navigation.navigate('CrudDanhSach');
+                navigation.navigate('CrudDanhSach', { refresh: true });
             }
         }
     };
-
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -110,17 +110,15 @@ export default function Them() {
                     onChangeText={text => setDiaChi(text)}
                 />
                 <View style={styles.input}>
-    <Picker
-        selectedValue={selectedValue}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-    >
-        {chucVus.map((item) => (
-            <Picker.Item key={item.maCv} label={item.tenCv} value={item.maCv} />
-        ))}
-    </Picker>
-</View>
-
-
+                    <Picker
+                        selectedValue={selectedValue}
+                        onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                    >
+                        {chucVus.map((item) => (
+                            <Picker.Item key={item.maCv} label={item.tenCv} value={item.maCv} />
+                        ))}
+                    </Picker>
+                </View>
 
                 <TextInput
                     style={styles.input}
@@ -141,9 +139,6 @@ export default function Them() {
 }
 
 const styles = StyleSheet.create({
-    viewpicker: {
-
-    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -157,14 +152,6 @@ const styles = StyleSheet.create({
         width: '50%',
         position: 'relative',
         margin: 5,
-    },
-    buttonImage: {
-        width: 20,
-        height: 20,
-    },
-    buttonImage1: {
-        width: 40,
-        height: 40,
     },
     imageBox: {
         borderWidth: 1,
@@ -218,4 +205,3 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
 });
-

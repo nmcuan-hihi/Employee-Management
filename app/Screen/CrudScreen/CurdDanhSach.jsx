@@ -5,10 +5,15 @@ import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import ArrEmployee from '../../Model/ArrEmployee';
 
+const arrEmployee = new ArrEmployee();
+
 const CrudDanhSach = () => {
   const navigation = useNavigation();
   const [nhanViens, setNhanViens] = useState([]);
-  const arrEmployee = new ArrEmployee(); // Khởi tạo ArrEmployee với baseUrl
+  //const arrEmployee = new ArrEmployee(); // Khởi tạo ArrEmployee với baseUrl
+
+
+ 
 
   useEffect(() => {
     fetchEmployees();
@@ -70,6 +75,7 @@ const CrudDanhSach = () => {
       <View style={styles.header}>
         <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
       </View>
+
       <TouchableOpacity onPress={() => navigation.navigate('Them')}>
         <Ionicons name="person-add" size={34} color="blue" />
       </TouchableOpacity>
