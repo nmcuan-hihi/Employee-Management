@@ -105,7 +105,7 @@ const currentMonth = new Date().getMonth();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Bảng Lương Tháng</Text>
+        <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>
 
       </View>
       <View style={styles.pickerContainer}>

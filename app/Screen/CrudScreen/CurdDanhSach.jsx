@@ -73,6 +73,7 @@ const CrudDanhSach = () => {
 
 
   return (
+    
     <View style={styles.container}>
       <View style={styles.imageBox}>
         <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />

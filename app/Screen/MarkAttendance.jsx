@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   container: {
-    height: '72%',
+    height: '69%',
     backgroundColor: 'white',
     margin: 10,
     borderRadius: 10,

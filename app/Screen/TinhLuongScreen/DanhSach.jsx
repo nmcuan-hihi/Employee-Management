@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
-
+import { useFocusEffect } from '@react-navigation/native';
 export default function DanhSach() {
   const navigation = useNavigation();
   const [nhanViens, setNhanViens] = useState([]);
@@ -12,10 +12,11 @@ export default function DanhSach() {
 
   const arrEmployee = new ArrEmployee();
   const manageAttendance = new ManageAttendance();
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
    
     fetchEmployees();
-  }, []);
+  }, []));
 
   const fetchEmployees = async () => {
     const employees = await arrEmployee.getArremployeeAPI();

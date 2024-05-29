@@ -52,7 +52,7 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <Image source={require('../../../assets/logo.png')} style={styles.logo} />
-            <Text style={styles.title}>STT: 9 - Vũ Văn Đức - Nhóm 8</Text>
+          
             <Text style={styles.title}>Đăng nhập</Text>
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <TextInput

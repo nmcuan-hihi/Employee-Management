@@ -47,7 +47,8 @@ export default function Edit() {
                 setTenNv(nvc.tenNV);
                 setPass('123');
                 setSoDT(nvc.soDT);
-                setQuyen('user');
+                setQuyen(nvc.quyen);
+                console.log(nvc.tenChucVu)
                 setDiaChi(nvc.diaChi);
                 setChucVu(nvc.tenChucVu || ''); // Đặt giá trị mặc định cho chucVu
                 setMucLuong(nvc.mucLuong ? nvc.mucLuong.toString() : ''); // Đặt giá trị mặc định cho mucLuong

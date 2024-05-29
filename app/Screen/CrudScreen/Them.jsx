@@ -53,24 +53,22 @@ export default function Them() {
                 if (phoneNumber.charAt(0) !== '0') {
                     phoneNumber = '0' + phoneNumber;
                     setSoDT(phoneNumber);
-                } else if (phoneNumber.charAt(0) === '0' && phoneNumber.length < 11) {
+                } else if (phoneNumber.charAt(0) === '0' && phoneNumber.length < 10) {
                     alert("Nhập thiếu số điện thoại");
                 } else {
                     setSoDT(phoneNumber);
-                }
-            } else {
-                console.log(new Employee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong));
-                await arrEmployee.addEmployee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong);
+                    await arrEmployee.addEmployee(maNv, "123", tenNv, soDT, 'user', diaChi, selectedValue, mucLuong);
 
-                setMessage('Nhân viên đã được thêm!');
-                setMaNv('');
-                setTenNv('');
-                setSoDT('');
-                setDiaChi('');
-                setSelectedValue('');
-                setMucLuong('');
-                navigation.navigate('CrudDanhSach', { refresh: true });
-            }
+                    setMessage('Nhân viên đã được thêm!');
+                    setMaNv('');
+                    setTenNv('');
+                    setSoDT('');
+                    setDiaChi('');
+                    setSelectedValue('');
+                    setMucLuong('');
+                    navigation.navigate('CrudDanhSach', { refresh: true });
+                }
+            } 
         }
     };
 
