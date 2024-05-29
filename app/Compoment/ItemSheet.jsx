@@ -7,7 +7,7 @@ const SheetItem = ({ item, year }) => {
   const navigation = useNavigation();
 
   const goToTableAttendance = () => {
-    navigation.push('tableattendance', { maNV: item.maNV });
+    navigation.push('tableattendance', { maNV: item });
   };
 
   return (

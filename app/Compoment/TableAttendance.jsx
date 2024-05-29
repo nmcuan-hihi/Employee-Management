@@ -22,7 +22,11 @@ export default function TableAttendance({ maNV, month, year }) {
     // lấy data chám công
       const newData = await Promise.all(daysInMonth.map(async (day) => {
       const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD'); // lấy ngày của từng cột
-      const dayAttendance = await manageAttendance.getAttendanceData(maNV, date.format('YYYY-MM-DD')); // lấy giwof vào giờ ra của từng n=gày
+      const dayAttendance = await manageAttendance.getAttendanceData(maNV, date.format('YYYY-MM-DD')); 
+      console.log("date" + date.format('YYYY-MM-DD'))
+      console.log("mvNV" + maNV)
+      // lấy giwof vào giờ ra của từng n=gày
+     console.log("fsdafadf  "+dayAttendance)
       return {
         id: dayAttendance.length > 0 ? dayAttendance[0].id : null,
         timein: dayAttendance.length > 0 ? dayAttendance[0].timein : '-',

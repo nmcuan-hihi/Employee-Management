@@ -21,7 +21,7 @@ export default function ViewTableAttendance() {
         const fetchEmployee = async () => {
             await arrEmployee.getArremployeeAPI();
             const employee = arrEmployee.getEmployeeByMaNV(maNV);
-            setEmp(employee);
+            setEmp(maNV);
         };
 
         fetchEmployee();
@@ -71,9 +71,9 @@ export default function ViewTableAttendance() {
                             <Text style={{ fontSize: 16, fontWeight: "bold" }}>{emp.tenNV}</Text>
                         </View>
                     </View>
-                </View>
+</View>
                 <ScrollView style={{ height: '75%' }}>
-                    <TableAttendance maNV={maNV} month={month.month() + 1} year={month.year()} />
+                    <TableAttendance maNV={emp.maNV} month={month.month() + 1} year={month.year()} />
                 </ScrollView>
             </View>
         </LinearGradient>
