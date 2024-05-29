@@ -40,7 +40,7 @@ export default function Edit() {
         fetchChucVu();
 
         const fetchEmployeeData = async () => {
-            const nvc = await arrEmployee.getEmployeeByMaNVApi(ma);
+            const nvc = await arrEmployee.getEmployeeByMaNV(ma);
             console.log("Dữ liệu nhân viên:", nvc);
             if (nvc) {
                 setMaNv(nvc.maNV);

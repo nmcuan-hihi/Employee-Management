@@ -34,10 +34,30 @@ class ArrEmployee {
     }
   }
 
-  deleteEmployee(maNV) {
-    this.employees = this.employees.filter(emp => emp.maNV !== maNV);
-  }
+  // deleteEmployee(maNV) {
+  //   this.employees = this.employees.filter(emp => emp.maNV !== maNV);
+  // }
+  async getEmployeeByMaNVApi(maNV) {
+    try {
+        const response = await axios.get(`http://10.0.2.2:8080/employee/${maNV}`);
+        const empData = response.data;
 
+        // Trả về đối tượng Employee từ dữ liệu nhận được
+        return new Employee(
+            empData.maNV,
+            empData.pass,
+            empData.tenNV,
+            empData.soDT,
+            empData.quyen,
+            empData.diaChi,
+            empData.tenChucVu,
+            empData.mucLuong
+        );
+    } catch (error) {
+        console.error('Error fetching employee by maNV:', error);
+        return null;
+    }
+}
   async getEmployeeByMaNV(maNV) {
     try {
       const response = await axios.get('http://10.0.2.2:8080/employee/getByMaNV/'+maNV);
