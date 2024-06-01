@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import ArrEmployee from '../../Model/ArrEmployee';
 import { useNavigation } from '@react-navigation/native';
 
@@ -52,7 +52,6 @@ const Login = () => {
     return (
         <View style={styles.container}>
             <Image source={require('../../../assets/logo.png')} style={styles.logo} />
-          
             <Text style={styles.title}>Đăng nhập</Text>
             {error ? <Text style={styles.error}>{error}</Text> : null}
             <TextInput
@@ -68,27 +67,25 @@ const Login = () => {
                 onChangeText={setPassword}
                 secureTextEntry
             />
-            <Button title="Đăng nhập" onPress={handleLogin} />
-            <Text style={styles.text} onPress={handleRegister}>Chưa có tài khoản? Đăng ký</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Đăng nhập</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleRegister}>
+                <Text style={styles.text}>Chưa có tài khoản? Đăng ký</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     logo: {
-        width: 300,
-        height: 150,
+        width: 200,
+        height: 100,
         marginBottom: 20,
-    },
-    text: {
-        fontSize: 16,
-        color: '#333',
-        marginLeft: 150,
-        marginTop: 50,
     },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#f0f0f0', // Set the background color here
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
@@ -99,12 +96,29 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     input: {
-        height: 40,
+        height: 50,
         width: '100%',
-        borderColor: 'gray',
+        borderColor: 'blue',
         borderWidth: 1,
         marginBottom: 20,
         paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    button: {
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    text: {
+        fontSize: 16,
+        color: 'blue',
+        marginTop: 10,
     },
     error: {
         color: 'red',

@@ -123,15 +123,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    width: 300,
-    height: 150,
+    width: 200,
+    height: 100,
     marginBottom: 20,
   },
   text: {
     fontSize: 16,
-    color: '#333',
-    marginLeft: 150,
-    marginTop: 50,
+    color: 'blue',
+    marginTop: 20,
   },
   radioContainer: {
     flexDirection: 'row',
@@ -140,11 +139,13 @@ const styles = StyleSheet.create({
   },
   radioLabel: {
     marginRight: 10,
+    fontSize: 16,
   },
   radioButton: {
     borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
+    borderColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
     marginRight: 10,
   },
@@ -156,21 +157,23 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f0f0f0', // Background color adjusted
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
   inputContainer: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50, // Increased height
+    borderColor: 'blue', // Adjusted border color
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingHorizontal: 10,
+    borderRadius: 5,
   },
 });
+
 
 export default RegisterScreen;
