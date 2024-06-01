@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DanhSach() {
   const navigation = useNavigation();
   const [nhanViens, setNhanViens] = useState([]);
-  const currentMonth = new Date().getMonth() + 1;
-  const currentYear = new Date().getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   const arrEmployee = new ArrEmployee();
   const manageAttendance = new ManageAttendance();
@@ -18,13 +20,13 @@ export default function DanhSach() {
   useFocusEffect(
     useCallback(() => {
       fetchEmployees();
-    }, [])
+    }, [selectedMonth, selectedYear])
   );
 
   const fetchEmployees = async () => {
     const employees = await arrEmployee.getArremployeeAPI();
     const list = await Promise.all(employees.map(async (emp) => {
-      const workingDays = await manageAttendance.calculateTotalWorkingHours(emp.maNV, currentMonth, currentYear);
+      const workingDays = await manageAttendance.calculateTotalWorkingHours(emp.maNV, selectedMonth, selectedYear);
       return {
         ...emp,
         gioCong: workingDays.toFixed(2),
@@ -72,7 +74,7 @@ export default function DanhSach() {
           <Text style={styles.employeeAttendance}>Tổng giờ làm: {item.gioCong}</Text>
         </View>
         <View style={styles.salaryButtonContainer}>
-          <Button title="Tính Lương" onPress={() => tinhLuong(item)} color="#4CAF50" />
+          <Button title="Tính Lương" onPress={() => tinhLuong(item)} color="#FF6A6A" />
           <Text style={styles.salaryText}>{item.tongLuong ? item.tongLuong + ' VND' : 'Chưa tính'}</Text>
         </View>
       </View>
@@ -82,11 +84,28 @@ export default function DanhSach() {
   return (
     <LinearGradient colors={['#7F7FD5', '#E9E4F0']} style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={styles.imageBox}>
-          <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
-        </View>
         <View style={styles.header}>
           <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
+        </View>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={selectedMonth}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue) => setSelectedMonth(itemValue)}
+          >
+            {Array.from({ length: 12 }, (_, i) => (
+              <Picker.Item key={i} label={`Tháng ${i + 1}`} value={i + 1} />
+            ))}
+          </Picker>
+          <Picker
+            selectedValue={selectedYear}
+            style={{ height: 50, width: 150 }}
+            onValueChange={(itemValue) => setSelectedYear(itemValue)}
+          >
+            {Array.from({ length: 10 }, (_, i) => (
+              <Picker.Item key={i} label={`${new Date().getFullYear() - i}`} value={new Date().getFullYear() - i} />
+            ))}
+          </Picker>
         </View>
         <FlatList
           style={styles.flatlist}
@@ -97,7 +116,7 @@ export default function DanhSach() {
         <StatusBar style="auto" />
       </View>
     </LinearGradient>
-  );
+  );  
 }
 
 const styles = StyleSheet.create({
@@ -131,6 +150,12 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontWeight: 'bold',
     fontSize: 25,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
   },
   flatlist: {
     width: '90%',
