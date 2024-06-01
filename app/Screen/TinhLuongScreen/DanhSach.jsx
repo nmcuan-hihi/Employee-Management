@@ -1,22 +1,25 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Button, Image, StatusBar, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
-import { useFocusEffect } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 export default function DanhSach() {
   const navigation = useNavigation();
   const [nhanViens, setNhanViens] = useState([]);
-  const currentMonth = new Date().getMonth() + 1; 
-  const currentYear = new Date().getFullYear(); 
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
 
   const arrEmployee = new ArrEmployee();
   const manageAttendance = new ManageAttendance();
+
   useFocusEffect(
     useCallback(() => {
-   
-    fetchEmployees();
-  }, []));
+      fetchEmployees();
+    }, [])
+  );
 
   const fetchEmployees = async () => {
     const employees = await arrEmployee.getArremployeeAPI();
@@ -26,15 +29,13 @@ export default function DanhSach() {
         ...emp,
         gioCong: workingDays.toFixed(2),
         mucLuong: emp.mucLuong || 0,
-        isSalaryCalculated: false 
+        isSalaryCalculated: false
       };
     }));
     setNhanViens(list);
-
-    
   };
 
-   const tinhLuong = (employee) => {
+  const tinhLuong = (employee) => {
     const updatedEmployees = nhanViens.map(emp => {
       if (emp.maNV === employee.maNV) {
         if (emp.isSalaryCalculated) {
@@ -57,17 +58,13 @@ export default function DanhSach() {
     setNhanViens(updatedEmployees);
   };
 
- 
-
   const handleEmployeePress = (employee) => {
     console.log('Thông tin nhân viên:', employee);
-    navigation.navigate('navChiTietNV', { employee: employee }); 
+    navigation.navigate('navChiTietNV', { employee: employee });
   };
 
   const renderEmployeeItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleEmployeePress(item)}>
-
-
       <View style={styles.employeeItem}>
         <View style={styles.employeeInfo}>
           <Text style={styles.employeeName}>{item.tenNV}</Text>
@@ -83,74 +80,72 @@ export default function DanhSach() {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.imageBox}>
-        <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
+    <LinearGradient colors={['#7F7FD5', '#E9E4F0']} style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.imageBox}>
+          <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
+        </View>
+        <FlatList
+          style={styles.flatlist}
+          data={nhanViens}
+          renderItem={renderEmployeeItem}
+          keyExtractor={item => item.maNV}
+        />
+        <StatusBar style="auto" />
       </View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
-      </View>
-      <FlatList
-        style={styles.flatlist}
-        data={nhanViens}
-        renderItem={renderEmployeeItem}
-        keyExtractor={item => item.maNV}
-      />
-      <StatusBar style="auto" />
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: StatusBar.currentHeight,
   },
   imageBox: {
-    borderWidth: 1,
-    width: '100%',
-    height: '100%',
-    padding: 10,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    alignSelf: 'flex-start',
+    alignItems: 'center',
+    marginVertical: 20,
   },
   backgroundImage: {
-    padding: 0,
-    borderWidth: 0,
-    width: '20%',
-    height: '15%',
+    width: '40%',
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: 'contain',
   },
   header: {
     borderWidth: 1,
     borderColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
-    right: '15%',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginBottom: 20,
   },
   headerText: {
     color: 'blue',
     fontWeight: 'bold',
     fontSize: 25,
-    padding: 5,
   },
   flatlist: {
-    width: '100%',
+    width: '90%',
   },
   employeeItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 13,
-    margin: 5,
+    padding: 15,
+    marginVertical: 5,
     borderWidth: 1,
-    width: '100%',
     borderColor: '#ccc',
-    fontSize: 16,
+    borderRadius: 10,
+    backgroundColor: 'white',
+    width: '100%',
   },
   employeeInfo: {
     flex: 1,

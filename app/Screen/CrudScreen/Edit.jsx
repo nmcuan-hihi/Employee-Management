@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Image, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import QuanLiChucVu from '../../Model/QuanLyChucVu';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Edit() {
     const route = useRoute();
@@ -48,10 +49,9 @@ export default function Edit() {
                 setPass('123');
                 setSoDT(nvc.soDT);
                 setQuyen(nvc.quyen);
-                console.log(nvc.tenChucVu)
                 setDiaChi(nvc.diaChi);
-                setChucVu(nvc.tenChucVu || ''); // Đặt giá trị mặc định cho chucVu
-                setMucLuong(nvc.mucLuong ? nvc.mucLuong.toString() : ''); // Đặt giá trị mặc định cho mucLuong
+                setChucVu(nvc.tenChucVu || '');
+                setMucLuong(nvc.mucLuong ? nvc.mucLuong.toString() : '');
             } else {
                 console.error("Dữ liệu nhân viên không hợp lệ");
             }
@@ -65,7 +65,7 @@ export default function Edit() {
             setMessage('Vui lòng điền đầy đủ thông tin');
             return;
         }
-    
+
         const updatedInfo = {
             pass,
             tenNV,
@@ -73,11 +73,11 @@ export default function Edit() {
             quyen,
             diaChi,
             mucLuong: parseInt(mucLuong, 10),
-            tenChucVu: chucVu  // Đảm bảo gửi tenChucVu
+            tenChucVu: chucVu
         };
-    
-        console.log("Thông tin cập nhật:", updatedInfo); // Kiểm tra log thông tin trước khi gửi
-    
+
+        console.log("Thông tin cập nhật:", updatedInfo);
+
         try {
             const response = await fetch(`http://10.0.2.2:8080/employee/update/${ma}`, {
                 method: 'PUT',
@@ -86,7 +86,7 @@ export default function Edit() {
                 },
                 body: JSON.stringify(updatedInfo),
             });
-    
+
             if (response.ok) {
                 setMessage('Cập nhật nhân viên thành công');
                 navigation.navigate('CrudDanhSach', { refresh: true });
@@ -98,127 +98,138 @@ export default function Edit() {
             setMessage('Đã xảy ra lỗi khi cập nhật nhân viên');
         }
     };
-    
 
     return (
-        <View style={styles.container}>
-            <View style={styles.imageBox}>
-                <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
-            </View>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Sửa Thông Tin Nhân Viên</Text>
-            </View>
-
-            <View style={styles.form}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Mã nhân viên"
-                    value={maNV}
-                    editable={false}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Tên nhân viên"
-                    value={tenNV}
-                    onChangeText={setTenNv}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Số điện thoại"
-                    value={soDT}
-                    keyboardType='numeric'
-                    onChangeText={setSoDT}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Địa chỉ"
-                    value={diaChi}
-                    onChangeText={setDiaChi}
-                />
-                <View style={styles.input}>
-                    <Picker
-                        selectedValue={chucVu}
-                        onValueChange={(itemValue) => setChucVu(itemValue)}
-                    >
-                        {chucVus.map((item) => (
-                            <Picker.Item key={item.maCv} label={item.tenCv} value={item.maCv} />
-                        ))}
-                    </Picker>
+        <LinearGradient colors={['#7F7FD5', '#E9E4F0']} style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <View style={styles.imageBox}>
+                    <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
                 </View>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Mức lương"
-                    value={mucLuong}
-                    keyboardType='numeric'
-                    onChangeText={setMucLuong}
-                />
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>Sửa Thông Tin Nhân Viên</Text>
+                </View>
 
-                <Text>{message}</Text>
+                <View style={styles.form}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Mã nhân viên"
+                        value={maNV}
+                        editable={false}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Tên nhân viên"
+                        value={tenNV}
+                        onChangeText={setTenNv}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Số điện thoại"
+                        value={soDT}
+                        keyboardType='numeric'
+                        onChangeText={setSoDT}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Địa chỉ"
+                        value={diaChi}
+                        onChangeText={setDiaChi}
+                    />
+                    <View style={styles.pickerContainer}>
+                        <Picker
+                            selectedValue={chucVu}
+                            onValueChange={(itemValue) => setChucVu(itemValue)}
+                        >
+                            {chucVus.map((item) => (
+                                <Picker.Item key={item.maCv} label={item.tenCv} value={item.maCv} />
+                            ))}
+                        </Picker>
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Mức lương"
+                        value={mucLuong}
+                        keyboardType='numeric'
+                        onChangeText={setMucLuong}
+                    />
 
-                <View style={styles.buttonContainer}>
-                    <Button title="Sửa" onPress={handleEditNhanVien} />
+                    {message ? <Text style={styles.message}>{message}</Text> : null}
+
+                    <View style={styles.buttonContainer}>
+                        <Button title="Sửa" onPress={handleEditNhanVien} />
+                    </View>
                 </View>
             </View>
-        </View>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
     },
     header: {
+        width: '90%',
         borderWidth: 1,
         borderColor: 'blue',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        justifyContent: 'center',
+        alignItems: 'center',
         marginVertical: 10,
-        paddingHorizontal: 10,
+        padding: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
     },
     headerText: {
         color: 'blue',
         fontWeight: 'bold',
         fontSize: 25,
-        padding: 5,
     },
     form: {
-        borderWidth: 1,
         width: '90%',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        marginTop: 20,
     },
     input: {
         height: 40,
-        width: '80%',
+        width: '100%',
         borderColor: 'gray',
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
-        marginTop: 20,
+        borderRadius: 5,
+    },
+    pickerContainer: {
+        height: 40,
+        width: '100%',
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '80%',
-        margin: 5,
+        width: '100%',
+        marginTop: 20,
+    },
+    message: {
+        color: 'red',
+        marginVertical: 10,
     },
     imageBox: {
-        borderWidth: 1,
-        width: '100%',
-        height: '100%',
-        padding: 10,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        alignSelf: 'flex-start',
+        alignItems: 'center',
+        marginVertical: 20,
     },
     backgroundImage: {
         width: '50%',
         height: '15%',
+        resizeMode: 'contain',
     },
 });
+

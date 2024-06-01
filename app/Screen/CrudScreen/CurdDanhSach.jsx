@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert ,Image} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import ArrEmployee from '../../Model/ArrEmployee';
 
 const arrEmployee = new ArrEmployee();
@@ -53,112 +54,101 @@ const CrudDanhSach = () => {
   };
 
   const renderEmployeeItem = ({ item }) => (
-  <View key={item.maNV} style={styles.employeeItem}>
-    <View style={[styles.initialCircle, { backgroundColor: '#8a2be2' }]}>
-      <Text style={styles.initialText}>{getInitial(item.tenNV)}</Text>
+    <View key={item.maNV} style={styles.employeeItem}>
+      <View style={[styles.initialCircle, { backgroundColor: '#8a2be2' }]}>
+        <Text style={styles.initialText}>{getInitial(item.tenNV)}</Text>
+      </View>
+      <View style={{ flexDirection: 'column', flex: 1 }}>
+        <Text style={{ marginBottom: 5, fontWeight: 'bold', color: 'black' }}>{item.maNV}</Text>
+        <Text style={{ color: 'black' }}>{item.tenNV}</Text>
+      </View>
+      <TouchableOpacity onPress={() => navigation.push('Edit', { ma: item.maNV })}>
+        <FontAwesome5 name="edit" size={24} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleDeleteNhanVien(item.maNV)}>
+        <Ionicons name="remove-circle-outline" size={24} color="black" />
+      </TouchableOpacity>
     </View>
-    <View style={{ flexDirection: 'column', flex: 1 }}>
-  <Text style={{ marginBottom: 5, fontWeight: 'bold', color: 'black' }}>{item.maNV}</Text>
-  <Text style={{ color: 'black' }}>{item.tenNV}</Text>
-</View>
-
-    <TouchableOpacity onPress={() => navigation.push('Edit', { ma: item.maNV })}>
-      <FontAwesome5 name="edit" size={24} color="black" />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => handleDeleteNhanVien(item.maNV)}>
-      <Ionicons name="remove-circle-outline" size={24} color="black" />
-    </TouchableOpacity>
-  </View>
-);
-
+  );
 
   return (
-    
-    <View style={styles.container}>
-      <View style={styles.imageBox}>
-        <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
+    <LinearGradient colors={['#7F7FD5', '#E9E4F0']} style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <View style={styles.imageBox}>
+          <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Them')}>
+            <Ionicons name="person-add" size={34} color="blue" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.flatlistContainer}>
+          <FlatList
+            style={styles.flatlist}
+            data={nhanViens}
+            renderItem={renderEmployeeItem}
+            keyExtractor={item => item.maNV}
+          />
+          <StatusBar style="auto" />
+        </View>
       </View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Them')}>
-          <Ionicons name="person-add" size={34} color="blue" />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.flatlistContainer}>
-        <FlatList
-          style={styles.flatlist}
-          data={nhanViens}
-          renderItem={renderEmployeeItem}
-          keyExtractor={item => item.maNV}
-        />
-        <StatusBar style="auto" />
-      </View>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   header: {
+    width: '95%',
     borderWidth: 1,
     borderColor: 'blue',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
     flexDirection: 'row',
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
   imageBox: {
-    borderWidth: 1,
     width: '100%',
-    height: '100%',
-    padding: 10,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    alignSelf: 'flex-start',
+    alignItems: 'center',
+    marginVertical: 20,
   },
   backgroundImage: {
-    padding: 0,
-    borderWidth: 0,
     width: '50%',
     height: '15%',
+    resizeMode: 'contain',
   },
   headerText: {
     color: 'blue',
     fontWeight: 'bold',
     fontSize: 25,
-    padding: 5,
-    marginRight: 10,
   },
   flatlistContainer: {
-    borderWidth: 1,
     width: '95%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '60%',
-    padding: 3,
+    flex: 1,
+    padding: 5,
   },
   employeeItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    margin: 5,
+    marginVertical: 5,
     borderWidth: 1,
-    width: '100%',
     borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: 'white',
   },
   initialCircle: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#007bff',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
@@ -167,11 +157,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  buttonImage: {
-    width: 20,
-    height: 20,
-    paddingEnd: 3,
   },
 });
 
