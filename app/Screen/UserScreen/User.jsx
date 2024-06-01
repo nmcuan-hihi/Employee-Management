@@ -89,7 +89,7 @@ const ThongTinNhanVien = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff', // Đổi màu nền thành trắng
     flex: 1,
   },
   signOutButton: {
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5', // Đổi màu nền của card thành màu xám nhạt
     borderRadius: 10,
     padding: 20,
     shadowColor: '#000',

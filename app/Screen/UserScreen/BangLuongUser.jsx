@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, FlatList, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function DanhSach() {
     const navigation = useNavigation();
@@ -14,23 +16,21 @@ export default function DanhSach() {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth();
 
-    const [selectedMonth, setSelectedMonth] = useState(currentMonth + 1); // Tháng mặc định
-    const [selectedYear, setSelectedYear] = useState(currentYear); // Năm mặc định
+    const [selectedMonth, setSelectedMonth] = useState(currentMonth + 1); // Default month
+    const [selectedYear, setSelectedYear] = useState(currentYear); // Default year
     const [salaryList, setSalaryList] = useState([]);
-    
 
-    const yearList = Array.from({ length: currentYear - 2019 }, (value, index) => 2020 + index);
+    const yearList = Array.from({ length: currentYear - 2019 + 1 }, (value, index) => 2020 + index);
 
     useEffect(() => {
         const calculateSalary = (totalHours, mucLuong) => {
-            // Đặt quy tắc tính lương của công ty
+            // Your salary calculation logic
             const luongThang = totalHours * mucLuong / 234;
             return luongThang.toFixed(0);
         };
 
         const fetchEmployeeData = async (username) => {
-            const employee = await employees.getEmployeeByMaNV(username); // Lấy thông tin của nhân viên từ mã nhân viên (username)
-
+            const employee = await employees.getEmployeeByMaNV(username);
             const totalHours = await manageAttendance.calculateTotalWorkingHours(employee.maNV, selectedMonth, selectedYear);
             const salary = calculateSalary(totalHours, employee.mucLuong);
 
@@ -45,75 +45,54 @@ export default function DanhSach() {
             setSalaryList(newSalaryList);
         };
 
-        const { username } = route.params; // Lấy thông tin tài khoản đã đăng nhập từ route.params
+        const { username } = route.params;
         fetchEmployeeData(username);
     }, [selectedMonth, selectedYear, route.params]);
 
-
-
     const renderEmployeeItem = ({ item }) => {
-        const lastName = item.tenNV.split(' ').pop();
-        const firstLetter = lastName.charAt(0);
-
         return (
-
             <View key={item.maNV} style={styles.employeeItem}>
-                <View style={styles.container1}>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Mã nhân viên:</Text>
-                        </View>
+                <View style={styles.infoContainer}>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Mã nhân viên:</Text>
                         <Text style={styles.text}>{item.maNV}</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Tên nhân viên:</Text>
-                        </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Tên nhân viên:</Text>
                         <Text style={styles.text}>{item.tenNV}</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Chức vụ:</Text>
-                        </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Chức vụ:</Text>
                         <Text style={styles.text}>{item.tenChucVu}</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Số điện thoại:</Text>
-                        </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Số điện thoại:</Text>
                         <Text style={styles.text}>{item.soDT}</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Lương cơ bản:</Text>
-                        </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Lương cơ bản:</Text>
                         <Text style={styles.text}>{item.mucLuong.toLocaleString()} vnđ</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Số giờ làm:</Text>
-                        </View>
-                        <Text style={styles.texth}>{item.totalHours.toLocaleString()}<Text style={styles.text}>  giờ</Text></Text>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Số giờ làm:</Text>
+                        <Text style={styles.text}>{item.totalHours.toLocaleString()} giờ</Text>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.labelContainer}>
-                            <Text style={styles.label}>Lương thực nhận:</Text>
-                        </View>
-                        <Text style={styles.textLuong}>{Math.floor(item.salary).toLocaleString()}  <Text style={styles.text}>vnđ</Text></Text>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Lương thực nhận:</Text>
+                        <Text style={styles.text}>{Math.floor(item.salary).toLocaleString()} vnđ</Text>
                     </View>
-                    
-
-
                 </View>
             </View>
         );
     };
 
     return (
-        <View style={styles.container}>
+        <LinearGradient colors={['#7F7FD5', '#ffffff']} style={styles.container}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                <Icon name="arrow-left" size={30} color="black" />
+            </TouchableOpacity>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth} </Text>
-
+                <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>
             </View>
             <View style={styles.pickerContainer}>
                 <Picker
@@ -121,137 +100,96 @@ export default function DanhSach() {
                     selectedValue={selectedMonth}
                     onValueChange={(itemValue) => setSelectedMonth(itemValue)}
                 >
-                    <Picker.Item label="Tháng 1" value={1} />
-                    <Picker.Item label="Tháng 2" value={2} />
-                    <Picker.Item label="Tháng 3" value={3} />
-                    <Picker.Item label="Tháng 4" value={4} />
-                    <Picker.Item label="Tháng 5" value={5} />
-                    <Picker.Item label="Tháng 6" value={6} />
-                    <Picker.Item label="Tháng 7" value={7} />
-                    <Picker.Item label="Tháng 8" value={8} />
-                    <Picker.Item label="Tháng 9" value={9} />
-                    <Picker.Item label="Tháng 10" value={10} />
-                    <Picker.Item label="Tháng 11" value={11} />
-                    <Picker.Item label="Tháng 12" value={12} />
+                    {Array.from({ length: 12 }, (_, i) => {
+                        const month = i + 1;
+                        return <Picker.Item key={month} label={`Tháng ${month}`} value={month} />;
+                    })}
                 </Picker>
-
-
                 <Picker
                     style={styles.picker}
                     selectedValue={selectedYear}
                     onValueChange={(itemValue) => setSelectedYear(itemValue)}
                 >
                     {yearList.map((year) => (
-                        <Picker.Item label={String(year)} value={year} key={year} />
+                        <Picker.Item key={year} label={String(year)} value={year} />
                     ))}
                 </Picker>
-        
-
             </View>
             <View style={styles.flatlistContainer}>
                 <FlatList
-                    style={styles.flatlist}
                     data={salaryList}
                     renderItem={renderEmployeeItem}
                     keyExtractor={item => item.maNV}
                 />
                 <StatusBar style="auto" />
             </View>
-        </View>
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 40,
     },
     header: {
-        borderWidth: 1,
-        borderColor: 'blue',
+        marginBottom: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 10,
-        right: '15%'
     },
     headerText: {
         color: 'blue',
         fontWeight: 'bold',
         fontSize: 25,
-        padding: 5,
+        textAlign: 'center',
     },
     pickerContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 20,
     },
     picker: {
         flex: 1,
-        width: 10,
     },
-
     flatlistContainer: {
+        flex: 1,
         borderWidth: 1,
-        width: '95%',
-     
-        height: '80%',
-        padding: 3,
-      
-    },
-    
-    avatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'blue',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    container1: {
-        marginTop: 10,
-        flex: 0.7,
-        backgroundColor: '#33FF66',
-        alignItems: 'center',
-        borderWidth: 1,
+        borderColor: '#000',
         borderRadius: 10,
-        color: '#33FF66',
-
-
+        padding: 10,
+        backgroundColor: '#7F7FD5',
     },
-
+    backButton: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+    },
+    employeeItem: {
+        marginBottom: 20,
+    },
     infoContainer: {
-
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        flexWrap: 'nowrap', // Ngăn các từ bị xuống dòng
-        marginHorizontal: 10,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        width: '100%',
     },
-    labelContainer: {
-        width: 120,
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
     },
     label: {
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 18,
+        color: 'blue',
     },
     text: {
-        flex: 1,
-        fontSize: 20,
+        fontSize: 18,
+        color: 'black',
         textAlign: 'right',
-        
     },
-
-    texth: {
-        flex: 1,
-        fontSize: 25,
-        textAlign: 'right',
-        fontWeight: 'bold'
-    },
-
-    textLuong: {
-        flex: 1,
-        fontSize: 30,
-        textAlign: 'right',
-        fontWeight: 'bold'
-    },
-
 });
