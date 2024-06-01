@@ -93,6 +93,7 @@ export default function DanhSach() {
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>
+                
             </View>
             <View style={styles.pickerContainer}>
                 <Picker

@@ -4,7 +4,7 @@ import { Alert } from 'react-native';
 
 class ManageAttendance {
   constructor() {
-    this.attendanceList = [];    
+    this.attendanceList = [];
   }
 
   addAttendance(maNV, date, timein = null, timeout = null) {
@@ -47,8 +47,8 @@ class ManageAttendance {
     const filteredAttendance = this.attendanceList.filter(attendance => {
       const attendanceDate = new Date(attendance.date);
       return attendance.maNV === maNV &&
-             attendanceDate.getMonth() === month - 1 &&
-             attendanceDate.getFullYear() === year;
+        attendanceDate.getMonth() === month - 1 &&
+        attendanceDate.getFullYear() === year;
     });
 
     const workingDaysSet = new Set(filteredAttendance.map(attendance => attendance.date));
@@ -57,21 +57,21 @@ class ManageAttendance {
 
   async getAttendanceData(maNV, date) {
     try {
-        const response = await axios.get(`http://10.0.2.2:8080/attendanceSheet/getByMaNVAndDate?maNV=${maNV}&date=${date}`);
-        const data = response.data.map(attenData => new AttendanceSheet(
-            attenData.id,
-            attenData.maNV,
-            attenData.date,
-            attenData.timein,
-            attenData.timeout
-        ));
-        return data;
+      const response = await axios.get(`http://10.0.2.2:8080/attendanceSheet/getByMaNVAndDate?maNV=${maNV}&date=${date}`);
+      const data = response.data.map(attenData => new AttendanceSheet(
+        attenData.id,
+        attenData.maNV,
+        attenData.date,
+        attenData.timein,
+        attenData.timeout
+      ));
+      return data;
     } catch (error) {
-        console.error(error);
-        Alert.alert('Error', 'Failed to fetch attendance data. Please try again!');
-        throw error;
+      console.error(error);
+      Alert.alert('Error', 'Failed to fetch attendance data. Please try again!');
+      throw error;
     }
-}
+  }
 
 
   async getArrAttendanceSheetAPI() {
@@ -82,7 +82,7 @@ class ManageAttendance {
         attenData.maNV,
         attenData.date,
         attenData.timein,
-        attenData.timeout,     
+        attenData.timeout,
       ));
       return this.attendanceList;
     } catch (error) {
@@ -96,7 +96,7 @@ class ManageAttendance {
         maNV: maNV,
         date: date,
         timein: timein,
-        timeout: timeout,           
+        timeout: timeout,
       });
     } catch (error) {
       console.error(error);

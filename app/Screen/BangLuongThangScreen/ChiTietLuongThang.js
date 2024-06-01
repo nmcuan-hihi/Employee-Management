@@ -3,9 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
+import ExportExcelDetails from '../../Model/ExportExcelDetails';
 
 export default function ChiTietBangLuong({ route }) {
-    const { employee } = route.params;
+    const employee = route.params.employee;
+    const year = route.params.year;
+    
+   
     const navigation = useNavigation();
 
     const handleBackPress = () => {
@@ -22,10 +26,14 @@ export default function ChiTietBangLuong({ route }) {
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Chi Tiết Lương Tháng: {employee.selectedMonth}</Text>
-            </View>
+                {/* Thêm nút Export Excel */}
+                <ExportExcelDetails item={employee} month={employee.selectedMonth} year={year} />
 
+            </View>
+            
             <View style={styles.infoContainer}>
                 <View style={styles.infoRow}>
+               
                     <Text style={styles.label}>Mã nhân viên:</Text>
                     <Text style={styles.text}>{employee.maNV}</Text>
                 </View>

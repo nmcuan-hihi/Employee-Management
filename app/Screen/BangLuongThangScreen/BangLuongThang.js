@@ -6,6 +6,8 @@ import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
 import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Foundation } from '@expo/vector-icons';
+import ExportExcel from '../../Model/ExportExcel';
 
 export default function DanhSach() {
   const navigation = useNavigation();
@@ -32,7 +34,7 @@ export default function DanhSach() {
       const fetchEmployeeData = async () => {
         const arrEmployee = await employees.getArremployeeAPI();
 
-        const newSalaryList = await Promise.all(arrEmployee.map(async (employee) => {
+          const newSalaryList = await Promise.all(arrEmployee.map(async (employee) => {
           const totalHours = await manageAttendance.calculateTotalWorkingHours(employee.maNV, selectedMonth, selectedYear);
           const salary = calculateSalary(totalHours, employee.mucLuong);
           return {
@@ -74,10 +76,10 @@ export default function DanhSach() {
   const renderEmployeeItem = ({ item }) => {
     const lastName = item.tenNV.split(' ').pop();
     const firstLetter = lastName.charAt(0);
-
+    console.log("emp  "+item);
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('ChiTietLuongThang', { employee: item })}
+        onPress={() => navigation.navigate('ChiTietLuongThang', { employee: item, year: selectedYear })}
       >
         <View key={item.maNV} style={styles.employeeItem}>
           <View style={styles.avatar}>
@@ -97,9 +99,11 @@ export default function DanhSach() {
         colors={['#7F7FD5', '#ffffff']}
         style={styles.gradientContainer}
       >
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>
+        <View style={[styles.header, { flexDirection: 'row', alignItems: 'center', gap: 20 }]}>
+          <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>         
+          <ExportExcel month={selectedMonth} year={selectedYear} salaryList={salaryList} />
         </View>
+
         <View style={styles.pickerContainer}>
           <Picker
             style={styles.picker}
