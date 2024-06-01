@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar, Button } from 'react-native'; // Import Button
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
@@ -91,6 +91,11 @@ export default function DanhSach() {
     );
   };
 
+  // Hàm xử lý sự kiện cho nút chuyển trang
+  const navigateToExportExcel = () => {
+    navigation.navigate('XuatFileExcel', { salaryList }); // Chuyển cả `salaryList` cùng với đường dẫn
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -136,6 +141,8 @@ export default function DanhSach() {
           renderItem={renderEmployeeItem}
           keyExtractor={item => item.maNV}
         />
+        {/* Thêm nút chuyển trang */}
+        <Button title="Xuất Excel" onPress={navigateToExportExcel} />
         <StatusBar style="auto" />
       </LinearGradient>
     </View>
