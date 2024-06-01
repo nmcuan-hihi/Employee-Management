@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import ManageAttendance from '../../Model/AttendanceSheetManager';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import TableAttendance from '../../Compoment/TableAttendance';
 
 export default function DanhSach() {
     const navigation = useNavigation();
     const route = useRoute();
-
+    const { username } = route.params;
     const employees = new ArrEmployee();
     const manageAttendance = new ManageAttendance();
     const currentYear = new Date().getFullYear();
@@ -45,46 +46,10 @@ export default function DanhSach() {
             setSalaryList(newSalaryList);
         };
 
-        const { username } = route.params;
+
         fetchEmployeeData(username);
     }, [selectedMonth, selectedYear, route.params]);
 
-    const renderEmployeeItem = ({ item }) => {
-        return (
-            <View key={item.maNV} style={styles.employeeItem}>
-                <View style={styles.infoContainer}>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Mã nhân viên:</Text>
-                        <Text style={styles.text}>{item.maNV}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Tên nhân viên:</Text>
-                        <Text style={styles.text}>{item.tenNV}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Chức vụ:</Text>
-                        <Text style={styles.text}>{item.tenChucVu}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Số điện thoại:</Text>
-                        <Text style={styles.text}>{item.soDT}</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Lương cơ bản:</Text>
-                        <Text style={styles.text}>{item.mucLuong.toLocaleString()} vnđ</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Số giờ làm:</Text>
-                        <Text style={styles.text}>{item.totalHours.toLocaleString()} giờ</Text>
-                    </View>
-                    <View style={styles.infoRow}>
-                        <Text style={styles.label}>Lương thực nhận:</Text>
-                        <Text style={styles.text}>{Math.floor(item.salary).toLocaleString()} vnđ</Text>
-                    </View>
-                </View>
-            </View>
-        );
-    };
 
     return (
         <LinearGradient colors={['#7F7FD5', '#ffffff']} style={styles.container}>
@@ -93,7 +58,7 @@ export default function DanhSach() {
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Bảng Lương Tháng {selectedMonth}</Text>
-                
+
             </View>
             <View style={styles.pickerContainer}>
                 <Picker
@@ -117,13 +82,26 @@ export default function DanhSach() {
                 </Picker>
             </View>
             <View style={styles.flatlistContainer}>
-                <FlatList
-                    data={salaryList}
-                    renderItem={renderEmployeeItem}
-                    keyExtractor={item => item.maNV}
-                />
-                <StatusBar style="auto" />
+                {salaryList.length > 0 && (
+                    <View style={styles.employeeItem}>
+                        <View style={styles.infoContainer}>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.label}>Số giờ làm:</Text>
+                                <Text style={styles.text}>{salaryList[0].totalHours.toLocaleString()} giờ</Text>
+                            </View>
+                            <View style={styles.infoRow}>
+                                <Text style={styles.label}>Lương thực nhận:</Text>
+                                <Text style={styles.text}>{Math.floor(salaryList[0].salary).toLocaleString()} vnđ</Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
+                <ScrollView style={{ height: '65%', backgroundColor: 'white'}}>
+                <TableAttendance maNV={username} month={selectedMonth} year={selectedYear} />
+
+                </ScrollView>
             </View>
+
         </LinearGradient>
     );
 }
@@ -135,7 +113,6 @@ const styles = StyleSheet.create({
         paddingTop: 40,
     },
     header: {
-        marginBottom: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -149,18 +126,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginBottom: 20,
+        marginBottom: 0,
     },
     picker: {
         flex: 1,
     },
     flatlistContainer: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 10,
-        padding: 10,
-        backgroundColor: '#7F7FD5',
+        // flex: 1,   
     },
     backButton: {
         position: 'absolute',
@@ -168,12 +140,13 @@ const styles = StyleSheet.create({
         left: 10,
     },
     employeeItem: {
-        marginBottom: 20,
+        marginBottom: 10,
+        padding: 5,
     },
     infoContainer: {
         backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
+        borderRadius: 5,
+        padding: 15,
         borderWidth: 1,
         borderColor: '#ccc',
         width: '100%',
@@ -181,7 +154,7 @@ const styles = StyleSheet.create({
     infoRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 15,
+        // marginBottom: 15,
     },
     label: {
         fontWeight: 'bold',
