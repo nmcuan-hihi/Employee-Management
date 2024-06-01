@@ -11,7 +11,7 @@ export default function PrintEmployee({ route }) {
     <LinearGradient colors={["#7F7FD5", "#E9E4F0"]} style={styles.container}>
       <View style={styles.headerContainer}>
         <Image style={styles.logo} source={require('../../../assets/logo.png')} />
-        <Text style={styles.header}>Thông Tin Nhân Viên</Text>
+        <Text style={styles.header}>Thông Tin Nhân Viên </Text>
       </View>
       <View style={styles.infoBox}>
         <View style={styles.infoContainer}>
@@ -43,9 +43,14 @@ export default function PrintEmployee({ route }) {
           <Text style={styles.text}>{employee.tongLuong} VND</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        style={[styles.backButton, { backgroundColor: '#FF6A6A', justifyContent: 'center', alignItems: 'center' }]}
+        onPress={() => navigation.goBack()}
+      >
         <Text style={styles.backButtonText}>Trở lại</Text>
       </TouchableOpacity>
+
+
     </LinearGradient>
   );
 }

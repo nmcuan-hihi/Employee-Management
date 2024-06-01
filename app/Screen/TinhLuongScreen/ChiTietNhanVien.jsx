@@ -51,7 +51,10 @@ export default function ChiTietNhanVien({ route }) {
             <Text style={styles.text}>{employee.tongLuong} vnđ</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={handlePrint} style={styles.printButton}>
+        <TouchableOpacity
+          onPress={handlePrint}
+          style={[styles.printButton, { backgroundColor: '#FF6A6A', width: 100, height: 50,justifyContent: 'center', alignItems: 'center' }]}
+        >
           <Text style={styles.printButtonText}>In</Text>
         </TouchableOpacity>
       </LinearGradient>
