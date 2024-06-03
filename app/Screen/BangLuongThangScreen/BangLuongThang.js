@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar,Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
@@ -74,17 +74,13 @@ export default function DanhSach() {
   );
 
   const renderEmployeeItem = ({ item }) => {
-    const lastName = item.tenNV.split(' ').pop();
-    const firstLetter = lastName.charAt(0);
-    console.log("emp  "+item);
+   
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate('ChiTietLuongThang', { employee: item, year: selectedYear })}
       >
         <View key={item.maNV} style={styles.employeeItem}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{firstLetter}</Text>
-          </View>
+        <Image source={{ uri: item.imageUrl }} style={styles.avatar} />
           <Text style={styles.maNV}>{item.maNV}</Text>
           <Text style={styles.tenNV}>{item.tenNV}</Text>
           <Text style={styles.luong}>{Math.floor(item.salary).toLocaleString()} vnđ</Text>
@@ -178,6 +174,16 @@ const styles = StyleSheet.create({
   flatlist: {
     width: '90%',
   },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+    borderColor: '#FF0000',
+  },
+
   employeeItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',

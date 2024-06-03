@@ -110,12 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
-  backgroundImage: {
-    width: '40%',
-    height: undefined,
-    aspectRatio: 1,
-    resizeMode: 'contain',
-  },
+ 
   header: {
     borderWidth: 1,
     borderColor: 'blue',

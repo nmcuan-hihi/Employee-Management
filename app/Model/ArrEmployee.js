@@ -6,7 +6,7 @@ class ArrEmployee {
     this.employees = [];
   }
 
-  async addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, tenChucVu, mucLuong) {
+  async addEmployee(maNV, pass, tenNV, soDT, quyen, diaChi, tenChucVu, mucLuong,imageUrl) {
     try {
       const response = await axios.post(`http://10.0.2.2:8080/employee/add`, {
         maNV,
@@ -16,7 +16,8 @@ class ArrEmployee {
         quyen,
         diaChi,
         tenChucVu,
-        mucLuong
+        mucLuong,
+        imageUrl
       });
       return response.data;
     } catch (error) {
@@ -51,7 +52,8 @@ class ArrEmployee {
             empData.quyen,
             empData.diaChi,
             empData.tenChucVu,
-            empData.mucLuong
+            empData.mucLuong,
+            empData.imageUrl
         );
     } catch (error) {
         console.error('Error fetching employee by maNV:', error);
@@ -71,7 +73,8 @@ class ArrEmployee {
           empData.quyen,
           empData.diaChi,
           empData.tenChucVu,
-          empData.mucLuong
+          empData.mucLuong,
+          empData.imageUrl
         );
         return employee;
       } else {
@@ -97,7 +100,8 @@ class ArrEmployee {
         empData.quyen,
         empData.diaChi,
         empData.tenChucVu,
-        empData.mucLuong
+        empData.mucLuong,
+        empData.imageUrl
       ));
       return this.employees;
     } catch (error) {

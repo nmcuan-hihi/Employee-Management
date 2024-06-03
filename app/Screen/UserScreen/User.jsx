@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import ArrEmployee from '../../Model/ArrEmployee';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Employee from '../../Model/Employee';
@@ -13,7 +13,7 @@ const ThongTinNhanVien = ({ navigation, route }) => {
       console.log(username); // Log để kiểm tra username
       const arrEmployee = new ArrEmployee();
       const employeeData = await arrEmployee.getEmployeeByMaNV(username);
-      
+
       setEmployee(employeeData);
       console.log(employeeData); // Log để kiểm tra employeeData
     };
@@ -53,6 +53,9 @@ const ThongTinNhanVien = ({ navigation, route }) => {
       </View>
 
       <View style={styles.card}>
+        
+          <Image source={{ uri: employee.imageUrl }} style={styles.avatar} />
+      
         <View style={styles.row}>
           <Text style={styles.label}>Mã NV:</Text>
           <Text style={styles.text}>{employee.maNV}</Text>
@@ -92,6 +95,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', // Đổi màu nền thành trắng
     flex: 1,
   },
+  cardavatar: {
+    textAlign: '',
+    backgroundColor: '#f5f5f5', // Đổi màu nền của card thành màu xám nhạt
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  avatar: {
+    marginLeft:50,
+    marginBottom:50,
+    width: 150,
+    height: 200,
+    backgroundColor: '#f5f5f5', // Đổi màu nền của card thành màu xám nhạt
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+   
+  },
   signOutButton: {
     alignSelf: 'flex-start',
     marginBottom: 10,
@@ -112,6 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
   },
+ 
   card: {
     backgroundColor: '#f5f5f5', // Đổi màu nền của card thành màu xám nhạt
     borderRadius: 10,

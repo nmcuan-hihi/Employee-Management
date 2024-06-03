@@ -6,6 +6,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import ArrEmployee from '../../Model/ArrEmployee';
 
+
 const arrEmployee = new ArrEmployee();
 
 const CrudDanhSach = () => {
@@ -55,9 +56,9 @@ const CrudDanhSach = () => {
 
   const renderEmployeeItem = ({ item }) => (
     <View key={item.maNV} style={styles.employeeItem}>
-      <View style={[styles.initialCircle, { backgroundColor: '#8a2be2' }]}>
-        <Text style={styles.initialText}>{getInitial(item.tenNV)}</Text>
-      </View>
+
+      <Image source={{ uri: item.imageUrl }} style={styles.avatar} />
+
       <View style={{ flexDirection: 'column', flex: 1 }}>
         <Text style={{ marginBottom: 5, fontWeight: 'bold', color: 'black' }}>{item.maNV}</Text>
         <Text style={{ color: 'black' }}>{item.tenNV}</Text>
@@ -75,9 +76,9 @@ const CrudDanhSach = () => {
     <LinearGradient colors={['#7F7FD5', '#E9E4F0']} style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.imageBox}>
-          <Image style={styles.backgroundImage} source={require('../../../assets/logo.png')} />
         </View>
         <View style={styles.header}>
+
           <Text style={styles.headerText}>Thông Tin Nhân Viên</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Them')}>
             <Ionicons name="person-add" size={34} color="blue" />
@@ -145,18 +146,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'white',
   },
-  initialCircle: {
+  avatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
+    borderColor: '#FF0000',
   },
+
   initialText: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+    resizeMode: 'cover',
   },
 });
 

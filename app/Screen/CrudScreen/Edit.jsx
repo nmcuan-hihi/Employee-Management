@@ -5,6 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import ArrEmployee from '../../Model/ArrEmployee';
 import QuanLiChucVu from '../../Model/QuanLyChucVu';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function Edit() {
     const route = useRoute();
@@ -20,6 +21,8 @@ export default function Edit() {
     const [mucLuong, setMucLuong] = useState('');
     const [message, setMessage] = useState('');
     const navigation = useNavigation();
+    const [imageUrl, setImageUrl] = useState('');
+    const [temImageUri, setTemImageUri] = useState('');
     const arrEmployee = new ArrEmployee();
     const qlChucVu = new QuanLiChucVu();
 
@@ -40,6 +43,8 @@ export default function Edit() {
 
         fetchChucVu();
 
+
+
         const fetchEmployeeData = async () => {
             const nvc = await arrEmployee.getEmployeeByMaNV(ma);
             console.log("Dữ liệu nhân viên:", nvc);
@@ -52,6 +57,7 @@ export default function Edit() {
                 setDiaChi(nvc.diaChi);
                 setChucVu(nvc.tenChucVu || '');
                 setMucLuong(nvc.mucLuong ? nvc.mucLuong.toString() : '');
+                setImageUrl(nvc.imageUrl);
             } else {
                 console.error("Dữ liệu nhân viên không hợp lệ");
             }
@@ -59,6 +65,23 @@ export default function Edit() {
 
         fetchEmployeeData();
     }, [ma]);
+
+    const chooseImage = async () => {
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            Alert.alert('Permission to access camera roll is required!');
+            return;
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync();
+
+        if (!result.cancelled) {
+
+            setImageUrl(result.assets[0].uri);
+        }
+    };
+
 
     const handleEditNhanVien = async () => {
         if (!tenNV || !soDT || !diaChi || !mucLuong || !chucVu) {
@@ -73,7 +96,8 @@ export default function Edit() {
             quyen,
             diaChi,
             mucLuong: parseInt(mucLuong, 10),
-            tenChucVu: chucVu
+            tenChucVu: chucVu,
+            imageUrl,
         };
 
         console.log("Thông tin cập nhật:", updatedInfo);
@@ -152,6 +176,15 @@ export default function Edit() {
                         keyboardType='numeric'
                         onChangeText={setMucLuong}
                     />
+                    <View style={styles.imagePreview}>
+                        {imageUrl ? (
+                            <Image source={{ uri: imageUrl }} style={styles.previewImage} />
+                        ) : (
+                            <Text>No image selected</Text>
+                        )
+                        }
+                    </View>
+                    <Button title="Chọn ảnh" onPress={chooseImage} />
 
                     {message ? <Text style={styles.message}>{message}</Text> : null}
 
@@ -222,14 +255,19 @@ const styles = StyleSheet.create({
         color: 'red',
         marginVertical: 10,
     },
-    imageBox: {
+
+
+    imagePreview: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
         alignItems: 'center',
-        marginVertical: 20,
+        justifyContent: 'center',
     },
-    backgroundImage: {
-        width: '50%',
-        height: '15%',
-        resizeMode: 'contain',
+    previewImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
     },
 });
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import ArrEmployee from '../../Model/ArrEmployee'; // Import class ArrEmployee
+import * as ImagePicker from 'expo-image-picker';
 
 const RegisterScreen = ({ navigation }) => {
   const [maNV, setMaNV] = useState('');
@@ -12,6 +13,7 @@ const RegisterScreen = ({ navigation }) => {
   const [error, setError] = useState('');
   const [employees, setEmployees] = useState([]);
   const [selectedOption, setSelectedOption] = useState('user');
+  const [selectedImage, setSelectedImage] = useState('');
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -21,10 +23,52 @@ const RegisterScreen = ({ navigation }) => {
       } catch (err) {
         setError('Failed to fetch employees');
       }
+
+
+
     };
+
+
 
     fetchEmployees();
   }, []);
+
+  const chooseImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.cancelled) {
+        setSelectedImage(result);
+        console.log(result)
+      }
+    } catch (error) {
+      console.log('Lỗi khi chọn ảnh từ thư viện:', error);
+    }
+  };
+
+  const takePhoto = async () => {
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.cancelled) {
+        setSelectedImage(result);
+      }
+    } catch (error) {
+      console.log('Lỗi khi chụp ảnh:', error);
+    }
+  };
+
+
 
   const handleAddEmployee = async () => {
     if (maNV && tenNV && soDT && pass && selectedOption) {
@@ -33,7 +77,7 @@ const RegisterScreen = ({ navigation }) => {
         return;
       }
 
-      const success = await arrEmployee.addEmployee(maNV, pass, tenNV, soDT, selectedOption, '', '', 0);
+      const success = await arrEmployee.addEmployee(maNV, pass, tenNV, soDT, selectedOption, '', '', 0, selectedImage.assets[0].uri);
 
       if (success) {
         setMaNV('');
@@ -61,6 +105,7 @@ const RegisterScreen = ({ navigation }) => {
       <View style={styles.inputContainer}>
         <Image source={require('../../../assets/logo.png')} style={styles.logo} />
         <Text style={styles.title}>Đăng ký</Text>
+
         <TextInput
           placeholder="Mã NV"
           value={maNV}
@@ -86,6 +131,24 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={text => setSoDT(text)}
           style={styles.input}
         />
+
+        <View style={styles.image}>
+          <View>
+
+            <View style={styles.buttonContainer}>
+              <Button title="Chọn ảnh" onPress={chooseImage} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button title="Chụp ảnh" onPress={takePhoto} />
+            </View>
+          </View>
+          {selectedImage?.assets && selectedImage.assets.length > 0 && (
+            <Image source={{ uri: selectedImage.assets[0].uri }} style={styles.selectedImage} />
+          )}
+        </View>
+       
+
+
         <View style={styles.radioContainer}>
           <Text style={styles.radioLabel}>Quyền:</Text>
           <TouchableOpacity
@@ -121,6 +184,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  buttonContainer: {
+    width: 100,
+    margin: 10,
+  },
+  image: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    marginTop: 10,
+    resizeMode: 'cover',
   },
   logo: {
     width: 200,

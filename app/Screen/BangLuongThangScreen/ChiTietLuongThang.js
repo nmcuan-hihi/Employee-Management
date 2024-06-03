@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,8 +8,8 @@ import ExportExcelDetails from '../../Model/ExportExcelDetails';
 export default function ChiTietBangLuong({ route }) {
     const employee = route.params.employee;
     const year = route.params.year;
-    
-   
+
+
     const navigation = useNavigation();
 
     const handleBackPress = () => {
@@ -30,10 +30,11 @@ export default function ChiTietBangLuong({ route }) {
                 <ExportExcelDetails item={employee} month={employee.selectedMonth} year={year} />
 
             </View>
-            
+
             <View style={styles.infoContainer}>
+                <Image source={{ uri: employee.imageUrl }} style={styles.avatar} />
                 <View style={styles.infoRow}>
-               
+
                     <Text style={styles.label}>Mã nhân viên:</Text>
                     <Text style={styles.text}>{employee.maNV}</Text>
                 </View>
@@ -83,6 +84,19 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlign: 'center',
     },
+    avatar: {
+        marginLeft:80,
+        marginBottom:50,
+        width: 150,
+        height: 150,
+        backgroundColor: '#f5f5f5', // Đổi màu nền của card thành màu xám nhạt
+        borderRadius: 10,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+       
+      },
     infoContainer: {
         backgroundColor: '#fff',
         borderRadius: 10,
